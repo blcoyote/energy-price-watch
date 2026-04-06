@@ -1,75 +1,61 @@
-# React + TypeScript + Vite
+# ⚡ Energy Price Watch
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Live day-ahead electricity prices for Denmark, built with React + TypeScript.
 
-Currently, two official plugins are available:
+**[→ blcoyote.github.io/energy-price-watch](https://blcoyote.github.io/energy-price-watch/)**
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## Hvad gør den?
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+- Henter **day-ahead spotpriser** for DK1 (Vest) og DK2 (Øst) fra [Energi Data Service](https://www.energidataservice.dk/tso-electricity/DayAheadPrices)
+- Henter **nettariffer** fra de lokale netselskaber via [DatahubPricelist](https://www.energidataservice.dk/datahub/DatahubPricelist) og lægger dem oven på spotprisen
+- Viser **morgendagens priser** automatisk fra kl. 13:00, hvor Nord Pool offentliggør dem
+- Fremhæver **den aktuelle time** med orange farve og en referencelinje
+- Klikbar søjlegraf — vælg en time for at se spot- og totalpris
+- Søjlerne er farvekodet: **grøn** = billigste, **rød** = dyreste, **blå** = øvrige
+- Opdaterer automatisk én gang i timen
 
-Note: This will impact Vite dev & build performances.
+## Stack
 
-## Expanding the ESLint configuration
+| Lag | Teknologi |
+|---|---|
+| UI | React 19 (React Compiler) + TypeScript |
+| Build | Vite 8 |
+| Server state | TanStack Query v5 |
+| Graf | Recharts v3 |
+| Linting | Biome |
+| Package manager | pnpm |
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Arkitektur
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Koden er organiseret som **vertical slices** under `src/features/`:
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```
+src/
+  features/
+    electricity-prices/
+      api/          # TanStack Query hooks
+      components/   # ElectricityPriceChart
+      types/        # TypeScript interfaces + netselskaber
+      utils.ts      # toKwh, toElectricityChartData
+      useDanishDateWindow.ts
+      index.ts      # Public barrel export
+  shared/
+    api/            # ApiError
+  App.tsx
+  main.tsx
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Kom i gang
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+pnpm install   # installer afhængigheder
+pnpm dev       # start udviklingsserver
+pnpm build     # typetjek + byg
+pnpm lint      # Biome lint
 ```
+
+## Deploy
+
+Appen deployes automatisk til GitHub Pages via `.github/workflows/deploy.yml` ved hvert push til `main`.
