@@ -1,243 +1,246 @@
 /* ── CSS Variables ── */
 :root {
-  --app-bg: #ffffff;
-  --app-surface: #f8fafc;
-  --app-border: #e2e8f0;
-  --app-text: #1e293b;
-  --app-text-muted: #64748b;
-  --app-text-subtle: #6b7280;
-  --app-accent: #2563eb;
-  --app-error: #dc2626;
+	--app-bg: #ffffff;
+	--app-surface: #f8fafc;
+	--app-border: #e2e8f0;
+	--app-text: #1e293b;
+	--app-text-muted: #64748b;
+	--app-text-subtle: #6b7280;
+	--app-accent: #2563eb;
+	--app-error: #dc2626;
 }
 
 /* Override index.css OS-media-query vars when manually forced */
 html.dark {
-  color-scheme: dark;
-  --bg: #16171d;
-  --text: #9ca3af;
-  --text-h: #f3f4f6;
-  --border: #2e303a;
-  --app-bg: #0f172a;
-  --app-surface: #1e293b;
-  --app-border: #334155;
-  --app-text: #f1f5f9;
-  --app-text-muted: #94a3b8;
-  --app-text-subtle: #94a3b8;
-  --app-accent: #60a5fa;
-  --app-error: #f87171;
+	color-scheme: dark;
+	--bg: #16171d;
+	--text: #9ca3af;
+	--text-h: #f3f4f6;
+	--border: #2e303a;
+	--app-bg: #0f172a;
+	--app-surface: #1e293b;
+	--app-border: #334155;
+	--app-text: #f1f5f9;
+	--app-text-muted: #94a3b8;
+	--app-text-subtle: #94a3b8;
+	--app-accent: #60a5fa;
+	--app-error: #f87171;
 }
 
 html.light {
-  color-scheme: light;
-  --bg: #fff;
-  --text: #6b6375;
-  --text-h: #08060d;
-  --border: #e5e4e7;
+	color-scheme: light;
+	--bg: #fff;
+	--text: #6b6375;
+	--text-h: #08060d;
+	--border: #e5e4e7;
 }
 
 /* ── App shell ── */
 .app-shell {
-  background: var(--app-bg);
-  color: var(--app-text);
-  min-height: 100svh;
-  transition: background 0.2s, color 0.2s;
+	background: var(--app-bg);
+	color: var(--app-text);
+	min-height: 100svh;
+	transition:
+		background 0.2s,
+		color 0.2s;
 }
 
 /* ── Toolbar ── */
 .app-toolbar {
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.5rem;
-  padding: 0.75rem 1rem 0;
-  max-width: 900px;
-  margin: 0 auto;
+	display: flex;
+	justify-content: flex-end;
+	gap: 0.5rem;
+	padding: 0.75rem 1rem 0;
+	max-width: 900px;
+	margin: 0 auto;
 }
 
 .toolbar-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 2rem;
-  height: 2rem;
-  border: 1px solid var(--app-border);
-  border-radius: 6px;
-  background: var(--app-surface);
-  color: var(--app-text-muted);
-  cursor: pointer;
-  transition: background 0.15s, color 0.15s;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 2rem;
+	height: 2rem;
+	border: 1px solid var(--app-border);
+	border-radius: 6px;
+	background: var(--app-surface);
+	color: var(--app-text-muted);
+	cursor: pointer;
+	transition:
+		background 0.15s,
+		color 0.15s;
 }
 
 .toolbar-btn:hover {
-  background: var(--app-border);
-  color: var(--app-text);
+	background: var(--app-border);
+	color: var(--app-text);
 }
 
 /* ── Layout ── */
 .prices-panel {
-  width: 100%;
-  max-width: 900px;
-  margin: 0 auto;
-  padding: clamp(1rem, 4vw, 2rem);
-  box-sizing: border-box;
+	width: 100%;
+	max-width: 900px;
+	margin: 0 auto;
+	padding: clamp(1rem, 4vw, 2rem);
+	box-sizing: border-box;
 }
 
 /* ── Header ── */
 .prices-header {
-  margin-bottom: 1.25rem;
-  text-align: center;
+	margin-bottom: 1.25rem;
+	text-align: center;
 }
 
 .prices-title {
-  font-size: clamp(1.1rem, 3.5vw, 1.75rem);
-  font-weight: 700;
-  line-height: 1.25;
-  margin: 0 0 0.4rem;
-  word-break: break-word;
-  color: var(--app-text);
+	font-size: clamp(1.1rem, 3.5vw, 1.75rem);
+	font-weight: 700;
+	line-height: 1.25;
+	margin: 0 0 0.4rem;
+	word-break: break-word;
+	color: var(--app-text);
 }
 
 .prices-subtitle {
-  font-size: clamp(0.8rem, 2.5vw, 0.95rem);
-  color: var(--app-text-muted);
-  margin: 0;
-  line-height: 1.5;
+	font-size: clamp(0.8rem, 2.5vw, 0.95rem);
+	color: var(--app-text-muted);
+	margin: 0;
+	line-height: 1.5;
 }
 
 .prices-subtitle a {
-  color: var(--app-accent);
-  text-decoration: none;
+	color: var(--app-accent);
+	text-decoration: none;
 }
 .prices-subtitle a:hover {
-  text-decoration: underline;
+	text-decoration: underline;
 }
 
 /* ── Controls row ── */
 .controls {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  margin-bottom: 1.25rem;
+	display: flex;
+	justify-content: center;
+	flex-wrap: wrap;
+	gap: 0.75rem;
+	margin-bottom: 1.25rem;
 }
 
 .control-group {
-  border: 1px solid var(--app-border);
-  border-radius: 6px;
-  padding: 0.4rem 0.9rem 0.6rem;
-  margin: 0;
-  min-width: 0;
+	border: 1px solid var(--app-border);
+	border-radius: 6px;
+	padding: 0.4rem 0.9rem 0.6rem;
+	margin: 0;
+	min-width: 0;
 }
 
 .control-group legend {
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: var(--app-text-subtle);
-  padding: 0 0.25rem;
+	font-size: 0.78rem;
+	font-weight: 600;
+	color: var(--app-text-subtle);
+	padding: 0 0.25rem;
 }
 
 /* Radio buttons */
 .radio-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem 0.75rem;
-  margin-top: 0.25rem;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.25rem 0.75rem;
+	margin-top: 0.25rem;
 }
 
 .radio-label {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-  font-size: 0.9rem;
-  cursor: pointer;
-  white-space: nowrap;
-  color: var(--app-text);
+	display: flex;
+	align-items: center;
+	gap: 0.35rem;
+	font-size: 0.9rem;
+	cursor: pointer;
+	white-space: nowrap;
+	color: var(--app-text);
 }
 
 /* Toggle switch */
 .switch-label {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.9rem;
-  cursor: pointer;
-  margin-top: 0.25rem;
-  color: var(--app-text);
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	font-size: 0.9rem;
+	cursor: pointer;
+	margin-top: 0.25rem;
+	color: var(--app-text);
 }
 
 .switch-input {
-  width: 18px;
-  height: 18px;
-  cursor: pointer;
-  accent-color: var(--app-accent);
+	width: 18px;
+	height: 18px;
+	cursor: pointer;
+	accent-color: var(--app-accent);
 }
 
 /* ── Status messages ── */
 .status-msg {
-  font-size: 0.9rem;
-  color: var(--app-text-subtle);
-  margin: 0.5rem 0;
+	font-size: 0.9rem;
+	color: var(--app-text-subtle);
+	margin: 0.5rem 0;
 }
 
 .status-error {
-  color: var(--app-error);
+	color: var(--app-error);
 }
 
 /* ── Price info box (sits inline with other control-groups) ── */
 .price-box {
-  min-width: 10rem;
+	min-width: 10rem;
 }
 
 .price-box-row {
-  display: flex;
-  gap: 0.4rem;
-  align-items: baseline;
-  font-size: 0.88rem;
-  line-height: 1.6;
+	display: flex;
+	gap: 0.4rem;
+	align-items: baseline;
+	font-size: 0.88rem;
+	line-height: 1.6;
 }
 
 .price-box-label {
-  color: var(--app-text-muted);
-  min-width: 3rem;
+	color: var(--app-text-muted);
+	min-width: 3rem;
 }
 
 .price-box-value {
-  font-weight: 600;
-  color: var(--app-text-muted);
+	font-weight: 600;
+	color: var(--app-text-muted);
 }
 
 .price-box-total .price-box-label,
 .price-box-total .price-box-value {
-  color: var(--app-accent);
+	color: var(--app-accent);
 }
 
 /* ── Chart container ── */
 .recharts-responsive-container {
-  touch-action: pan-y;
+	touch-action: pan-y;
 }
 
 /* ── Recharts dark mode ── */
 html.dark .recharts-cartesian-axis-tick text {
-  fill: var(--app-text-muted);
+	fill: var(--app-text-muted);
 }
 
 html.dark .recharts-cartesian-grid line {
-  stroke: var(--app-border);
+	stroke: var(--app-border);
 }
 
 html.dark .recharts-legend-item-text {
-  color: var(--app-text-muted);
+	color: var(--app-text-muted);
 }
 
 html.dark .recharts-default-tooltip {
-  background-color: var(--app-surface);
-  border-color: var(--app-border);
+	background-color: var(--app-surface);
+	border-color: var(--app-border);
 }
 
 html.dark .recharts-tooltip-label {
-  color: var(--app-text);
+	color: var(--app-text);
 }
 
 html.dark .recharts-tooltip-item {
-  color: var(--app-text-muted);
+	color: var(--app-text-muted);
 }
-
