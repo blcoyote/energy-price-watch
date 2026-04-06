@@ -80,6 +80,7 @@ export default defineConfig({
 	test: {
 		environment: "node",
 		globals: true,
+		setupFiles: ["./src/test-setup.ts"],
 		alias: {
 			"@features": path.resolve(__dirname, "src/features"),
 			"@shared": path.resolve(__dirname, "src/shared"),

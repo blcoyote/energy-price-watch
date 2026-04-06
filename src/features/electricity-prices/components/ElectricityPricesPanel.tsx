@@ -57,7 +57,7 @@ export function ElectricityPricesPanel() {
 	});
 
 	useEffect(() => {
-		function handleMouseDown(e: MouseEvent) {
+		function handleOutside(e: MouseEvent | TouchEvent) {
 			if (
 				chartWrapperRef.current &&
 				!chartWrapperRef.current.contains(e.target as Node)
@@ -65,8 +65,12 @@ export function ElectricityPricesPanel() {
 				setSelectedEntry(null);
 			}
 		}
-		document.addEventListener("mousedown", handleMouseDown);
-		return () => document.removeEventListener("mousedown", handleMouseDown);
+		document.addEventListener("mousedown", handleOutside);
+		document.addEventListener("touchstart", handleOutside, { passive: true });
+		return () => {
+			document.removeEventListener("mousedown", handleOutside);
+			document.removeEventListener("touchstart", handleOutside);
+		};
 	}, [setSelectedEntry]);
 
 	const headingLabel = usingTomorrow
