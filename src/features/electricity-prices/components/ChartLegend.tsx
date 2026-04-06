@@ -1,4 +1,6 @@
-export function ChartLegend() {
+import type { ReactElement } from "react";
+
+export function ChartLegend(): ReactElement {
 	return (
 		<div
 			style={{
@@ -15,7 +17,13 @@ export function ChartLegend() {
 	);
 }
 
-function LegendItem({ fill, label }: { fill: string; label: string }) {
+function LegendItem({
+	fill,
+	label,
+}: {
+	fill: string;
+	label: string;
+}): ReactElement {
 	return (
 		<span style={{ display: "flex", alignItems: "center", gap: "0.35rem" }}>
 			<svg aria-hidden="true" width="12" height="12">

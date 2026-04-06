@@ -3,13 +3,14 @@ import type {
 	Payload,
 	ValueType,
 } from "recharts/types/component/DefaultTooltipContent";
+import type { ReactElement } from "react";
 import type { TooltipContentProps } from "recharts/types/component/Tooltip";
 
 export function ChartTooltip({
 	active,
 	payload,
 	label,
-}: TooltipContentProps<ValueType, NameType>) {
+}: TooltipContentProps<ValueType, NameType>): ReactElement | null {
 	if (!active || !payload?.length) return null;
 	return (
 		<div className="chart-tooltip">

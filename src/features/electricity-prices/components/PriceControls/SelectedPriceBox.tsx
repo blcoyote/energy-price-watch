@@ -1,3 +1,4 @@
+import type { ReactElement } from "react";
 import type { SelectedPriceEntry } from "../ElectricityPriceChart";
 
 export type SelectedPriceBoxProps = {
@@ -10,7 +11,7 @@ export function SelectedPriceBox({
 	entry,
 	liveTotal,
 	showTotal,
-}: SelectedPriceBoxProps) {
+}: SelectedPriceBoxProps): ReactElement {
 	return (
 		<div className="control-group price-box">
 			<span className="price-box-time">{entry.time}</span>

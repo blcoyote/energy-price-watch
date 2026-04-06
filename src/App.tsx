@@ -1,9 +1,9 @@
 import { ElectricityPricesPanel } from "@features/electricity-prices";
-import { useEffect, useState } from "react";
+import { type ReactElement, useEffect, useState } from "react";
 import "./App.css";
 import { CompressIcon, ExpandIcon, MoonIcon, SunIcon } from "./ui/icons";
 
-export default function App() {
+export default function App(): ReactElement {
 	const [darkMode, setDarkMode] = useState(true);
 	const [isFullscreen, setIsFullscreen] = useState(false);
 

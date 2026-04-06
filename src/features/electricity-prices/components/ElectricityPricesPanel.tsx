@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { type ReactElement, useEffect, useRef, useState } from "react";
 import { ChevronLeftIcon, ChevronRightIcon } from "../../../ui/icons";
 import { useElectricityPrices } from "../api/useElectricityPrices";
 import { useElectricityTariff } from "../api/useElectricityTariff";
@@ -9,7 +9,7 @@ import { useSelectedEntry } from "../useSelectedEntry";
 import { ElectricityPriceChart } from "./ElectricityPriceChart";
 import { PriceControls } from "./PriceControls";
 
-export function ElectricityPricesPanel() {
+export function ElectricityPricesPanel(): ReactElement {
 	const [priceArea, setPriceArea] = useState<"DK1" | "DK2">("DK1");
 	const [includeTariff, setIncludeTariff] = useState(true);
 	const [showTomorrow, setShowTomorrow] = useState(false);

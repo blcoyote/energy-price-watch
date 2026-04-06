@@ -1,8 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
+import type { UseQueryResult } from "@tanstack/react-query";
 import { fetchHourlyTariff } from "./datahubTariffApi";
 import { electricityPriceKeys } from "./queryKeys";
 
-export function useElectricityTariff(glnNumber: string | null) {
+export function useElectricityTariff(
+	glnNumber: string | null,
+): UseQueryResult<number[], Error> {
 	return useQuery({
 		queryKey: electricityPriceKeys.tariff(glnNumber ?? ""),
 		queryFn: () => {

@@ -1,3 +1,4 @@
+import type { ReactElement } from "react";
 import type { SelectedPriceEntry } from "../ElectricityPriceChart";
 import { PriceAreaControl } from "./PriceAreaControl";
 import { SelectedPriceBox } from "./SelectedPriceBox";
@@ -19,7 +20,7 @@ export function PriceControls({
 	onIncludeTariffChange,
 	selectedEntry,
 	liveTotal,
-}: PriceControlsProps) {
+}: PriceControlsProps): ReactElement {
 	return (
 		<div className="controls">
 			<PriceAreaControl value={priceArea} onChange={onPriceAreaChange} />

@@ -1,9 +1,14 @@
+import type { ReactElement } from "react";
+
 export type TariffToggleProps = {
 	checked: boolean;
 	onChange: (v: boolean) => void;
 };
 
-export function TariffToggle({ checked, onChange }: TariffToggleProps) {
+export function TariffToggle({
+	checked,
+	onChange,
+}: TariffToggleProps): ReactElement {
 	return (
 		<div className="control-group">
 			<label className="switch-label">

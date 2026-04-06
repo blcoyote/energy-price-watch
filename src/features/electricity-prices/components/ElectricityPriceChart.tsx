@@ -1,3 +1,4 @@
+import type { ReactElement } from "react";
 import {
 	Bar,
 	BarChart,
@@ -45,7 +46,7 @@ export function ElectricityPriceChart({
 	currentDkHour,
 	selectedTimestamp,
 	onBarClick,
-}: Props) {
+}: Props): ReactElement {
 	const chartData: SelectedPriceEntry[] = data.map((d) => {
 		const spot = toKwh(d.priceDKK);
 		const hourIndex = parseInt(d.timestamp.slice(11, 13), 10);

@@ -1,14 +1,19 @@
-const PRICE_AREA_LABELS: Record<"DK1" | "DK2", string> = {
+import type { ReactElement } from "react";
+
+const PRICE_AREA_LABELS = {
 	DK1: "DK Vest",
 	DK2: "DK Øst",
-};
+} as const;
 
 export type PriceAreaControlProps = {
 	value: "DK1" | "DK2";
 	onChange: (area: "DK1" | "DK2") => void;
 };
 
-export function PriceAreaControl({ value, onChange }: PriceAreaControlProps) {
+export function PriceAreaControl({
+	value,
+	onChange,
+}: PriceAreaControlProps): ReactElement {
 	return (
 		<div className="control-group">
 			<div className="seg-control" role="radiogroup" aria-label="Priszone">
