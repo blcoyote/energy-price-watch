@@ -5,6 +5,7 @@ import path from 'node:path'
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: '/energy-price-watch/',
   plugins: [
     react(),
     babel({ presets: [reactCompilerPreset()] })
