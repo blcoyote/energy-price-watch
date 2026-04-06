@@ -11,13 +11,13 @@ import {
 } from "recharts";
 import type { ElectricityPriceChartPoint } from "../utils";
 import { toKwh } from "../utils";
-import { ChartLegend } from "./ChartLegend";
-import { ChartTooltip } from "./ChartTooltip";
 import {
 	makeSpotBarBackground,
 	makeSpotBarShape,
 	makeTariffBarShape,
 } from "./barShapes";
+import { ChartLegend } from "./ChartLegend";
+import { ChartTooltip } from "./ChartTooltip";
 import { COLOR_NOW } from "./chartColors";
 
 export type SelectedPriceEntry = {

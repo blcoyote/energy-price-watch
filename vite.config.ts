@@ -1,8 +1,8 @@
 import path from "node:path";
 import babel from "@rolldown/plugin-babel";
 import react, { reactCompilerPreset } from "@vitejs/plugin-react";
-import { defineConfig } from "vitest/config";
 import { VitePWA } from "vite-plugin-pwa";
+import { defineConfig } from "vitest/config";
 
 // https://vite.dev/config/
 export default defineConfig({
