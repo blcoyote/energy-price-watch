@@ -7,6 +7,8 @@ export type DateWindow = {
   tomorrowAvailable: boolean
   /** Current Danish hour (0-23), or undefined when showing tomorrow's prices. */
   currentDkHour: number | undefined
+  /** Today's date range, always available as a fallback. */
+  today: { start: string; end: string; currentDkHour: number }
 }
 
 function computeDateWindow(): DateWindow {
@@ -32,8 +34,8 @@ function computeDateWindow(): DateWindow {
   const tomorrowAvailable = dkHour >= 13
 
   return tomorrowAvailable
-    ? { start: tomorrowStr, end: dayAfterStr, displayDay: tomorrowStr, tomorrowAvailable: true, currentDkHour: undefined }
-    : { start: todayStr, end: tomorrowStr, displayDay: todayStr, tomorrowAvailable: false, currentDkHour: dkHour }
+    ? { start: tomorrowStr, end: dayAfterStr, displayDay: tomorrowStr, tomorrowAvailable: true, currentDkHour: undefined, today: { start: todayStr, end: tomorrowStr, currentDkHour: dkHour } }
+    : { start: todayStr, end: tomorrowStr, displayDay: todayStr, tomorrowAvailable: false, currentDkHour: dkHour, today: { start: todayStr, end: tomorrowStr, currentDkHour: dkHour } }
 }
 
 /** Tracks the current Danish date window and refreshes automatically on each hour boundary. */

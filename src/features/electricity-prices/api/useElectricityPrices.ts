@@ -4,11 +4,12 @@ import { fetchElectricityPrices } from './electricityPricesApi'
 import { toElectricityChartData } from '../utils'
 import type { DayAheadPricesQueryParams } from '../types'
 
-export function useElectricityPrices(params: DayAheadPricesQueryParams) {
+export function useElectricityPrices(params: DayAheadPricesQueryParams, options?: { enabled?: boolean }) {
   return useQuery({
     queryKey: electricityPriceKeys.list(params),
     queryFn: () => fetchElectricityPrices(params),
     select: toElectricityChartData,
     refetchInterval: 60 * 60 * 1000, // refetch every hour
+    enabled: options?.enabled ?? true,
   })
 }

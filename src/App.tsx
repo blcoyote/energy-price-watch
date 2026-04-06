@@ -60,23 +60,33 @@ function ElectricityPricesPanel() {
   // Automatically pick the first DSO for the selected price area
   const areaGln = GRID_COMPANIES.find(c => c.area === priceArea)?.gln ?? GRID_COMPANIES[0].gln
 
-  const { start, end, displayDay, tomorrowAvailable, currentDkHour } = useDanishDateWindow()
+  const { start, end, displayDay, tomorrowAvailable, currentDkHour: tomorrowDkHour, today } = useDanishDateWindow()
 
-  const params: DayAheadPricesQueryParams = {
-    priceArea,
-    start,
-    end,
-  }
+  const tomorrowParams: DayAheadPricesQueryParams = { priceArea, start, end }
+  const todayParams: DayAheadPricesQueryParams = { priceArea, start: today.start, end: today.end }
 
-  const { data, isPending, isError, error } = useElectricityPrices(params)
+  const { data: tomorrowData, isPending: tomorrowPending, isError, error } = useElectricityPrices(
+    tomorrowParams,
+    { enabled: tomorrowAvailable },
+  )
+  const { data: todayData, isPending: todayPending } = useElectricityPrices(todayParams)
+
+  // Use tomorrow's data only once it actually has records; fall back to today
+  const usingTomorrow = tomorrowAvailable && (tomorrowData?.length ?? 0) > 0
+  const data = usingTomorrow ? tomorrowData : todayData
+  const currentDkHour = usingTomorrow ? tomorrowDkHour : today.currentDkHour
+  const isPending = usingTomorrow ? tomorrowPending : todayPending
+  const activeDisplayDay = usingTomorrow ? displayDay : today.start
   const { data: tariffData, isPending: tariffPending } = useElectricityTariff(
     includeTariff ? areaGln : null,
   )
 
-  const headingLabel = tomorrowAvailable ? `I morgen — ${displayDay}` : `I dag — ${displayDay}`
-  const subLabel = tomorrowAvailable
+  const headingLabel = usingTomorrow ? `I morgen — ${activeDisplayDay}` : `I dag — ${activeDisplayDay}`
+  const subLabel = usingTomorrow
     ? 'Kommende day-ahead priser (offentliggjort efter kl. 13:00)'
-    : 'Dagens priser — morgendagens vises efter kl. 13:00'
+    : tomorrowAvailable
+      ? 'Morgendagens priser hentes… viser dagens priser i mellemtiden'
+      : 'Dagens priser — morgendagens vises efter kl. 13:00'
 
 
   // Selected bar — defaults to the current-hour bar once data is available
