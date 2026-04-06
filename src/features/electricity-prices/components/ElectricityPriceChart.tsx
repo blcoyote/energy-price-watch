@@ -12,11 +12,14 @@ import {
 import { toKwh } from '../utils'
 import type { ElectricityPriceChartPoint } from '../utils'
 
-const COLOR_MIN = '#16a34a'      // green-600
-const COLOR_MAX = '#dc2626'      // red-600
-const COLOR_DEFAULT = '#2563eb'  // blue-600
-const COLOR_TARIFF = '#d97706'   // amber-600
 const COLOR_NOW = '#f97316'      // orange-500 — current hour highlight
+
+/** Returns a fill colour for a column based on its total price. lightness=62 for spot, 44 for tariff. */
+function barFill(totalDKK: number, minVal: number, maxVal: number, lightness: number): string {
+  if (totalDKK === minVal) return `hsl(142, 71%, ${lightness}%)`  // green
+  if (totalDKK === maxVal) return `hsl(0, 72%, ${lightness}%)`    // red
+  return `hsl(221, 83%, ${lightness}%)`                           // blue
+}
 
 export type SelectedPriceEntry = {
   time: string
@@ -55,6 +58,7 @@ export function ElectricityPriceChart({ data, tariff, currentDkHour, selectedTim
   const totals = chartData.map(d => d.totalDKK)
   const minVal = Math.min(...totals)
   const maxVal = Math.max(...totals)
+  const hasNegative = minVal < 0
   const unit = ' DKK/kWh'
 
   // Find the bar whose timestamp hour matches currentDkHour for the reference line
@@ -122,14 +126,16 @@ export function ElectricityPriceChart({ data, tariff, currentDkHour, selectedTim
             )
           }}
           shape={(props: { x?: number; y?: number; width?: number; height?: number; timestamp?: string; totalDKK?: number }) => {
-            const { x = 0, y = 0, width = 0, height = 0, timestamp = '', totalDKK = 0 } = props
+            const { x = 0, width = 0, timestamp = '', totalDKK = 0 } = props
+            // Recharts passes negative height for negative-value bars in a single-entry stack.
+            // Normalise so the rect always has a positive height and y at the top edge.
+            let { y = 0, height = 0 } = props
+            if (height < 0) { y += height; height = -height }
             const isNow = nowEntry != null && timestamp === nowEntry.timestamp
             const isSelected = selectedTimestamp != null && timestamp === selectedTimestamp
             const fill = isNow
               ? COLOR_NOW
-              : totalDKK === minVal ? COLOR_MIN
-              : totalDKK === maxVal ? COLOR_MAX
-              : COLOR_DEFAULT
+              : barFill(totalDKK, minVal, maxVal, 62)
             return (
               <rect
                 x={x}
@@ -149,10 +155,20 @@ export function ElectricityPriceChart({ data, tariff, currentDkHour, selectedTim
             dataKey="tariffDKK"
             name="tariffDKK"
             stackId="price"
-            fill={COLOR_TARIFF}
             isAnimationActive={false}
             onClick={(barData: unknown) => { handleBarClick(barData) }}
+            shape={(props: { x?: number; y?: number; width?: number; height?: number; timestamp?: string; totalDKK?: number }) => {
+              const { x = 0, width = 0, timestamp = '', totalDKK = 0 } = props
+              let { y = 0, height = 0 } = props
+              if (height < 0) { y += height; height = -height }
+              const isNow = nowEntry != null && timestamp === nowEntry.timestamp
+              const fill = isNow ? '#ea580c' : barFill(totalDKK, minVal, maxVal, 44)
+              return <rect x={x} y={y} width={width} height={height} fill={fill} />
+            }}
           />
+        )}
+        {hasNegative && (
+          <ReferenceLine y={0} stroke="#94a3b8" strokeWidth={1} strokeDasharray="4 2" />
         )}
         {currentDkHour != null && nowEntry != null && (
           <ReferenceLine
