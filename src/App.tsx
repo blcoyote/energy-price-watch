@@ -4,9 +4,7 @@ import "./App.css";
 import { CompressIcon, ExpandIcon, MoonIcon, SunIcon } from "./ui/icons";
 
 export default function App() {
-	const [darkMode, setDarkMode] = useState(
-		() => window.matchMedia("(prefers-color-scheme: dark)").matches,
-	);
+	const [darkMode, setDarkMode] = useState(true);
 	const [isFullscreen, setIsFullscreen] = useState(false);
 
 	useEffect(() => {
