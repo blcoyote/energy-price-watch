@@ -311,10 +311,12 @@ html.light {
 	touch-action: pan-y;
 }
 
-/* Remove browser focus outline on the SVG when the chart is clicked */
-.recharts-wrapper svg:focus,
-.recharts-wrapper svg:focus-visible {
-	outline: none;
+/* Remove browser focus outline on anything inside the chart when clicked */
+.recharts-wrapper,
+.recharts-wrapper *,
+.recharts-wrapper svg,
+.recharts-wrapper svg * {
+	outline: none !important;
 }
 
 /* ── Recharts dark mode ── */
