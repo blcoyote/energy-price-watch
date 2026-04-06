@@ -53,6 +53,11 @@ html.light {
 	padding: 0.75rem 1rem 0;
 	max-width: 900px;
 	margin: 0 auto;
+
+	@media (max-width: 768px) {
+		max-width: 100%;
+		padding: 0.5rem 0.75rem 0;
+	}
 }
 
 .toolbar-btn {
@@ -83,6 +88,11 @@ html.light {
 	margin: 0 auto;
 	padding: clamp(1rem, 4vw, 2rem);
 	box-sizing: border-box;
+
+	@media (max-width: 768px) {
+		max-width: 100%;
+		padding: 0.75rem;
+	}
 }
 
 /* ── Header ── */
