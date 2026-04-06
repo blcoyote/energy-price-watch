@@ -324,15 +324,42 @@ html.dark .recharts-legend-item-text {
 	color: var(--app-text-muted);
 }
 
-html.dark .recharts-default-tooltip {
-	background-color: var(--app-surface);
-	border-color: var(--app-border);
+/* ── Chart tooltip ── */
+.chart-tooltip {
+	background: var(--app-surface);
+	border: 1px solid var(--app-border);
+	border-radius: 6px;
+	padding: 0.5rem 0.75rem;
+	font-size: 0.82rem;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 
-html.dark .recharts-tooltip-label {
+.chart-tooltip-label {
+	font-weight: 600;
 	color: var(--app-text);
+	margin: 0 0 0.35rem;
 }
 
-html.dark .recharts-tooltip-item {
+.chart-tooltip-row {
+	display: flex;
+	align-items: center;
+	gap: 0.4rem;
+	margin: 0.15rem 0;
 	color: var(--app-text-muted);
+}
+
+.chart-tooltip-dot {
+	width: 8px;
+	height: 8px;
+	border-radius: 2px;
+	flex-shrink: 0;
+}
+
+.chart-tooltip-name {
+	flex: 1;
+}
+
+.chart-tooltip-value {
+	font-weight: 600;
+	color: var(--app-text);
 }
