@@ -2,6 +2,7 @@ export { useElectricityPrices } from "./api/useElectricityPrices";
 export { useElectricityTariff } from "./api/useElectricityTariff";
 export type { SelectedPriceEntry } from "./components/ElectricityPriceChart";
 export { ElectricityPriceChart } from "./components/ElectricityPriceChart";
+export { ElectricityPricesPanel } from "./components/ElectricityPricesPanel";
 export type {
 	DayAheadPrice,
 	DayAheadPricesQueryParams,

@@ -53,6 +53,30 @@ export default defineConfig({
 			"@shared": path.resolve(__dirname, "src/shared"),
 		},
 	},
+	build: {
+		rolldownOptions: {
+			output: {
+				manualChunks(id: string) {
+					if (
+						id.includes("node_modules/react") ||
+						id.includes("node_modules/react-dom")
+					) {
+						return "vendor-react";
+					}
+					if (id.includes("node_modules/@tanstack")) {
+						return "vendor-query";
+					}
+					if (
+						id.includes("node_modules/recharts") ||
+						id.includes("node_modules/d3-") ||
+						id.includes("node_modules/victory-")
+					) {
+						return "vendor-recharts";
+					}
+				},
+			},
+		},
+	},
 	test: {
 		environment: "node",
 		globals: true,

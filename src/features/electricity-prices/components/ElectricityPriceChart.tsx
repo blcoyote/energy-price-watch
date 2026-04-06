@@ -90,7 +90,7 @@ export function ElectricityPriceChart({
 		<ResponsiveContainer width="100%" height={320}>
 			<BarChart
 				data={chartData}
-				margin={{ top: 8, right: 24, bottom: 8, left: 16 }}
+				margin={{ top: 8, right: 8, bottom: 8, left: 0 }}
 				style={{ cursor: onBarClick ? "pointer" : undefined }}
 			>
 				<CartesianGrid strokeDasharray="3 3" vertical={false} />
@@ -102,8 +102,14 @@ export function ElectricityPriceChart({
 				<YAxis
 					tick={{ fontSize: 12 }}
 					tickFormatter={(v: number) => v.toFixed(2)}
-					unit={unit}
-					width={96}
+					width={52}
+					label={{
+						value: "DKK/kWh",
+						angle: -90,
+						position: "insideLeft",
+						offset: 12,
+						style: { fontSize: 11, textAnchor: "middle" },
+					}}
 				/>
 				<Tooltip
 					formatter={(value, name) => {
