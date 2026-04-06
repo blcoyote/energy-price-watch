@@ -38,6 +38,8 @@ Never import directly from another slice's internals — always go through its `
 - Use named exports everywhere; no default exports except route components.
 - Prefer `type` over `interface` for object shapes that won't be extended.
 - Co-locate test files next to source: `MyComponent.test.tsx`.
+- Max 1 componenent pr file, but feel free to export multiple related utility functions from the same file. 
+- Group related components in folders rather than in files if it improves readability.
 - Use path aliases: `@features/*`, `@shared/*` (configure in `tsconfig.app.json` and `vite.config.ts`).
 
 ## Build & Test

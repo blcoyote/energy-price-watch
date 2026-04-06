@@ -312,11 +312,11 @@ html.light {
 }
 
 /* Remove browser focus outline on anything inside the chart when clicked */
-.recharts-wrapper,
-.recharts-wrapper *,
-.recharts-wrapper svg,
-.recharts-wrapper svg * {
-	outline: none !important;
+:where(.recharts-wrapper),
+:where(.recharts-wrapper) *,
+:where(.recharts-wrapper) svg,
+:where(.recharts-wrapper) svg * {
+	outline: none;
 }
 
 /* ── Recharts dark mode ── */
