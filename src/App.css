@@ -311,6 +311,12 @@ html.light {
 	touch-action: pan-y;
 }
 
+/* Remove browser focus outline on the SVG when the chart is clicked */
+.recharts-wrapper svg:focus,
+.recharts-wrapper svg:focus-visible {
+	outline: none;
+}
+
 /* ── Recharts dark mode ── */
 html.dark .recharts-cartesian-axis-tick text {
 	fill: var(--app-text-muted);
