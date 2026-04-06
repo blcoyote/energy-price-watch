@@ -12,92 +12,14 @@ import {
 } from "@features/electricity-prices";
 import { useEffect, useRef, useState } from "react";
 import "./App.css";
-
-function SunIcon() {
-	return (
-		<svg
-			width="16"
-			height="16"
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			strokeWidth="2"
-			strokeLinecap="round"
-			strokeLinejoin="round"
-			aria-hidden="true"
-		>
-			<circle cx="12" cy="12" r="5" />
-			<line x1="12" y1="1" x2="12" y2="3" />
-			<line x1="12" y1="21" x2="12" y2="23" />
-			<line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-			<line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-			<line x1="1" y1="12" x2="3" y2="12" />
-			<line x1="21" y1="12" x2="23" y2="12" />
-			<line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-			<line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-		</svg>
-	);
-}
-
-function MoonIcon() {
-	return (
-		<svg
-			width="16"
-			height="16"
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			strokeWidth="2"
-			strokeLinecap="round"
-			strokeLinejoin="round"
-			aria-hidden="true"
-		>
-			<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-		</svg>
-	);
-}
-
-function ExpandIcon() {
-	return (
-		<svg
-			width="16"
-			height="16"
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			strokeWidth="2"
-			strokeLinecap="round"
-			strokeLinejoin="round"
-			aria-hidden="true"
-		>
-			<polyline points="15 3 21 3 21 9" />
-			<polyline points="9 21 3 21 3 15" />
-			<line x1="21" y1="3" x2="14" y2="10" />
-			<line x1="3" y1="21" x2="10" y2="14" />
-		</svg>
-	);
-}
-
-function CompressIcon() {
-	return (
-		<svg
-			width="16"
-			height="16"
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			strokeWidth="2"
-			strokeLinecap="round"
-			strokeLinejoin="round"
-			aria-hidden="true"
-		>
-			<polyline points="4 14 10 14 10 20" />
-			<polyline points="20 10 14 10 14 4" />
-			<line x1="10" y1="14" x2="3" y2="21" />
-			<line x1="21" y1="3" x2="14" y2="10" />
-		</svg>
-	);
-}
+import {
+	ChevronLeftIcon,
+	ChevronRightIcon,
+	CompressIcon,
+	ExpandIcon,
+	MoonIcon,
+	SunIcon,
+} from "./ui/icons";
 
 const PRICE_AREA_LABELS: Record<"DK1" | "DK2", string> = {
 	DK1: "DK Vest",
@@ -107,41 +29,35 @@ const PRICE_AREA_LABELS: Record<"DK1" | "DK2", string> = {
 function ElectricityPricesPanel() {
 	const [priceArea, setPriceArea] = useState<"DK1" | "DK2">("DK1");
 	const [includeTariff, setIncludeTariff] = useState(true);
+	const [showTomorrow, setShowTomorrow] = useState(false);
 
 	// Automatically pick the first DSO for the selected price area
 	const areaGln =
 		GRID_COMPANIES.find((c) => c.area === priceArea)?.gln ??
 		GRID_COMPANIES[0].gln;
 
-	const {
-		start,
-		end,
-		displayDay,
-		tomorrowAvailable,
-		currentDkHour: tomorrowDkHour,
-		today,
-	} = useDanishDateWindow();
+	const { start, end, displayDay, tomorrowAvailable, today } =
+		useDanishDateWindow();
 
-	const tomorrowParams: DayAheadPricesQueryParams = { priceArea, start, end };
 	const todayParams: DayAheadPricesQueryParams = {
 		priceArea,
 		start: today.start,
 		end: today.end,
 	};
+	const tomorrowParams: DayAheadPricesQueryParams = { priceArea, start, end };
 
 	const {
-		data: tomorrowData,
-		isPending: tomorrowPending,
+		data: todayData,
+		isPending: todayPending,
 		isError,
 		error,
-	} = useElectricityPrices(tomorrowParams, { enabled: tomorrowAvailable });
-	const { data: todayData, isPending: todayPending } =
-		useElectricityPrices(todayParams);
+	} = useElectricityPrices(todayParams);
+	const { data: tomorrowData, isPending: tomorrowPending } =
+		useElectricityPrices(tomorrowParams, { enabled: tomorrowAvailable });
 
-	// Use tomorrow's data only once it actually has records; fall back to today
-	const usingTomorrow = tomorrowAvailable && (tomorrowData?.length ?? 0) > 0;
+	const usingTomorrow = showTomorrow && tomorrowAvailable;
 	const data = usingTomorrow ? tomorrowData : todayData;
-	const currentDkHour = usingTomorrow ? tomorrowDkHour : today.currentDkHour;
+	const currentDkHour = usingTomorrow ? undefined : today.currentDkHour;
 	const isPending = usingTomorrow ? tomorrowPending : todayPending;
 	const activeDisplayDay = usingTomorrow ? displayDay : today.start;
 	const { data: tariffData, isPending: tariffPending } = useElectricityTariff(
@@ -153,16 +69,21 @@ function ElectricityPricesPanel() {
 		: `I dag — ${activeDisplayDay}`;
 	const subLabel = usingTomorrow
 		? "Kommende day-ahead priser (offentliggjort efter kl. 13:00)"
-		: tomorrowAvailable
-			? "Morgendagens priser hentes… viser dagens priser i mellemtiden"
-			: "Dagens priser — morgendagens vises efter kl. 13:00";
+		: "Morgendagens day-ahead priser vises efter kl. 13:00";
 
 	// Selected bar — defaults to the current-hour bar once data is available
 	const [selectedEntry, setSelectedEntry] = useState<SelectedPriceEntry | null>(
 		null,
 	);
 	const initialised = useRef(false);
+	const lastShowTomorrow = useRef(showTomorrow);
 	useEffect(() => {
+		// Reset when the user switches between today and tomorrow
+		if (lastShowTomorrow.current !== showTomorrow) {
+			lastShowTomorrow.current = showTomorrow;
+			initialised.current = false;
+			setSelectedEntry(null);
+		}
 		if (initialised.current) return;
 		if (!data || data.length === 0) return;
 		if (currentDkHour == null) return;
@@ -182,7 +103,7 @@ function ElectricityPricesPanel() {
 				totalDKK: Math.round((spot + tariffVal) * 100) / 100,
 			});
 		}
-	}, [data, tariffData, currentDkHour]);
+	}, [data, tariffData, currentDkHour, showTomorrow]);
 
 	const priceBoxHour = selectedEntry
 		? parseInt(selectedEntry.timestamp.slice(11, 13), 10)
@@ -272,13 +193,40 @@ function ElectricityPricesPanel() {
 			)}
 
 			{data && data.length > 0 && (
-				<ElectricityPriceChart
-					data={data}
-					tariff={includeTariff ? tariffData : undefined}
-					currentDkHour={currentDkHour}
-					selectedTimestamp={selectedEntry?.timestamp}
-					onBarClick={setSelectedEntry}
-				/>
+				<div className="chart-wrapper">
+					{tomorrowAvailable && (
+						<div className="chart-nav">
+							<button
+								type="button"
+								className="chart-nav-btn"
+								disabled={!showTomorrow}
+								aria-label="Vis i dag"
+								onClick={() => setShowTomorrow(false)}
+							>
+								<ChevronLeftIcon />
+							</button>
+							<span className="chart-nav-label">
+								{usingTomorrow ? "I morgen" : "I dag"}
+							</span>
+							<button
+								type="button"
+								className="chart-nav-btn"
+								disabled={showTomorrow}
+								aria-label="Vis i morgen"
+								onClick={() => setShowTomorrow(true)}
+							>
+								<ChevronRightIcon />
+							</button>
+						</div>
+					)}
+					<ElectricityPriceChart
+						data={data}
+						tariff={includeTariff ? tariffData : undefined}
+						currentDkHour={currentDkHour}
+						selectedTimestamp={selectedEntry?.timestamp}
+						onBarClick={setSelectedEntry}
+					/>
+				</div>
 			)}
 		</section>
 	);

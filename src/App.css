@@ -215,6 +215,55 @@ html.light {
 }
 
 /* ── Chart container ── */
+.chart-wrapper {
+	position: relative;
+}
+
+.chart-nav {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 0.15rem;
+	margin-bottom: 0.35rem;
+}
+
+.chart-nav-label {
+	font-size: 0.78rem;
+	font-weight: 600;
+	color: var(--app-text-muted);
+	min-width: 4rem;
+	text-align: center;
+	user-select: none;
+}
+
+.chart-nav-btn {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 1.75rem;
+	height: 1.75rem;
+	border: 1px solid var(--app-border);
+	border-radius: 6px;
+	background: var(--app-surface);
+	color: var(--app-text-muted);
+	cursor: pointer;
+	padding: 0;
+	transition:
+		background 0.15s,
+		color 0.15s,
+		opacity 0.15s;
+}
+
+.chart-nav-btn:hover:not(:disabled) {
+	background: var(--app-border);
+	color: var(--app-text);
+}
+
+.chart-nav-btn:disabled {
+	opacity: 0.3;
+	cursor: default;
+}
+
 .recharts-responsive-container {
 	touch-action: pan-y;
 }

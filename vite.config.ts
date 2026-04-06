@@ -16,6 +16,10 @@ export default defineConfig({
 	test: {
 		environment: "node",
 		globals: true,
+		alias: {
+			"@features": path.resolve(__dirname, "src/features"),
+			"@shared": path.resolve(__dirname, "src/shared"),
+		},
 		coverage: {
 			provider: "v8",
 			include: ["src/**/*.ts", "src/**/*.tsx"],
