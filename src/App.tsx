@@ -219,6 +219,7 @@ export default function App() {
     <div className="app-shell">
       <div className="app-toolbar">
         <button
+          type="button"
           className="toolbar-btn"
           onClick={() => setDarkMode(d => !d)}
           aria-label={darkMode ? 'Skift til lystilstand' : 'Skift til mørktilstand'}
@@ -226,6 +227,7 @@ export default function App() {
           {darkMode ? <SunIcon /> : <MoonIcon />}
         </button>
         <button
+          type="button"
           className="toolbar-btn"
           onClick={toggleFullscreen}
           aria-label={isFullscreen ? 'Afslut fuld skærm' : 'Fuld skærm'}

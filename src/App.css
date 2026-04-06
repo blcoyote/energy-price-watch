@@ -225,19 +225,19 @@ html.dark .recharts-cartesian-grid line {
 }
 
 html.dark .recharts-legend-item-text {
-  color: var(--app-text-muted) !important;
+  color: var(--app-text-muted);
 }
 
 html.dark .recharts-default-tooltip {
-  background-color: var(--app-surface) !important;
-  border-color: var(--app-border) !important;
+  background-color: var(--app-surface);
+  border-color: var(--app-border);
 }
 
 html.dark .recharts-tooltip-label {
-  color: var(--app-text) !important;
+  color: var(--app-text);
 }
 
 html.dark .recharts-tooltip-item {
-  color: var(--app-text-muted) !important;
+  color: var(--app-text-muted);
 }
 

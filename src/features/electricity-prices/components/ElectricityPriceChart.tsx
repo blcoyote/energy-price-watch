@@ -102,11 +102,11 @@ export function ElectricityPriceChart({ data, tariff, currentDkHour, selectedTim
             content={() => (
               <div style={{ display: 'flex', justifyContent: 'center', gap: '1.25rem', fontSize: '0.82rem', marginTop: '0.25rem' }}>
                 <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                  <svg width="12" height="12"><rect width="12" height="12" rx="2" fill="hsl(221, 83%, 62%)" /></svg>
+                  <svg aria-hidden="true" width="12" height="12"><rect width="12" height="12" rx="2" fill="hsl(221, 83%, 62%)" /></svg>
                   Spotpris
                 </span>
                 <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                  <svg width="12" height="12"><rect width="12" height="12" rx="2" fill="hsl(221, 83%, 44%)" /></svg>
+                  <svg aria-hidden="true" width="12" height="12"><rect width="12" height="12" rx="2" fill="hsl(221, 83%, 44%)" /></svg>
                   Tarif
                 </span>
               </div>
