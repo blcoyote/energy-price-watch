@@ -39,9 +39,11 @@ export async function fetchHourlyTariff(glnNumber: string): Promise<number[]> {
 	const body = (await res.json()) as DatahubResponse;
 	const todayStr = new Date().toISOString().slice(0, 10);
 
-	// Keep only the latest active row per ChargeTypeCode (records are sorted ValidFrom DESC)
+	// Keep only the latest active hourly-energy row per ChargeTypeCode.
+	// Exclude P1D rows — those are demand/capacity charges (DKK/kW), not per-kWh energy tariffs.
 	const latestByCode = new Map<string, TariffRecord>();
 	for (const record of body.records) {
+		if (record.ResolutionDuration !== "PT1H") continue;
 		const expired = record.ValidTo !== null && record.ValidTo < todayStr;
 		if (!expired && !latestByCode.has(record.ChargeTypeCode)) {
 			latestByCode.set(record.ChargeTypeCode, record);

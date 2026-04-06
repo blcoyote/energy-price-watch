@@ -56,6 +56,8 @@ export type TariffRecord = {
 	Price22: number | null;
 	Price23: number | null;
 	Price24: number | null;
+	/** ISO 8601 duration. "PT1H" = hourly energy tariff; "P1D" = daily demand/capacity charge (not per-kWh). */
+	ResolutionDuration: string;
 };
 
 export type GridCompany = {

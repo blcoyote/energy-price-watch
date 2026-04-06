@@ -36,6 +36,7 @@ function makeRecord(overrides: Partial<TariffRecord> = {}): TariffRecord {
 		Price22: 0.1,
 		Price23: 0.1,
 		Price24: 0.1,
+		ResolutionDuration: "PT1H",
 	};
 	return { ...base, ...overrides };
 }
