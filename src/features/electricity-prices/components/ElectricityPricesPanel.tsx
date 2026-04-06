@@ -62,7 +62,13 @@ export function ElectricityPricesPanel() {
 				chartWrapperRef.current &&
 				!chartWrapperRef.current.contains(e.target as Node)
 			) {
-				setSelectedEntry(null);
+				// Dismiss the Recharts tooltip by simulating a mouse-leave on its
+				// wrapper. This keeps selectedEntry (and the controls price box) alive.
+				const rechartsWrapper =
+					chartWrapperRef.current.querySelector(".recharts-wrapper");
+				rechartsWrapper?.dispatchEvent(
+					new MouseEvent("mouseleave", { bubbles: true }),
+				);
 			}
 		}
 		document.addEventListener("mousedown", handleOutside);
@@ -71,7 +77,7 @@ export function ElectricityPricesPanel() {
 			document.removeEventListener("mousedown", handleOutside);
 			document.removeEventListener("touchstart", handleOutside);
 		};
-	}, [setSelectedEntry]);
+	}, []);
 
 	const headingLabel = usingTomorrow
 		? `I morgen — ${activeDisplayDay}`

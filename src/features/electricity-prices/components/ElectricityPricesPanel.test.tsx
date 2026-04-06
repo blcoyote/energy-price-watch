@@ -76,39 +76,95 @@ function renderPanel() {
 
 // ── Tests ─────────────────────────────────────────────────────────────────────
 
-describe("ElectricityPricesPanel — outside-click clears selection", () => {
+// FAKE_DATA has priceDKK: 500 → toKwh(500) = 0.50, hour 10 is auto-selected.
+// The price box in PriceControls renders these two unique strings:
+const PRICE_BOX_TIME = "10:00";
+const PRICE_BOX_SPOT = "0.50 kr/kWh"; // price-box-spot: spotDKK.toFixed(2)
+
+describe("ElectricityPricesPanel — outside-click dismisses chart tooltip", () => {
 	it("auto-selects the current hour on mount", () => {
 		renderPanel();
-		// useSelectedEntry auto-selects hour 10 — price box should show "10:00"
 		expect(screen.getByText("10:00")).toBeInTheDocument();
 	});
 
-	it("clears the selection when mousedown fires outside the chart wrapper", () => {
+	it("keeps the price box when mousedown fires outside the chart wrapper", () => {
 		renderPanel();
 		expect(screen.getByText("10:00")).toBeInTheDocument();
 
 		fireEvent.mouseDown(screen.getByRole("heading"));
 
-		expect(screen.queryByText("10:00")).not.toBeInTheDocument();
+		// Price box should still be visible — only the internal Recharts tooltip is dismissed
+		expect(screen.getByText("10:00")).toBeInTheDocument();
 	});
 
-	it("clears the selection when touchstart fires outside the chart wrapper", () => {
+	it("keeps the price box when touchstart fires outside the chart wrapper", () => {
 		renderPanel();
 		expect(screen.getByText("10:00")).toBeInTheDocument();
 
 		fireEvent.touchStart(screen.getByRole("heading"));
 
-		expect(screen.queryByText("10:00")).not.toBeInTheDocument();
+		expect(screen.getByText("10:00")).toBeInTheDocument();
 	});
 
 	it("keeps the selection when mousedown fires inside the chart wrapper", () => {
 		renderPanel();
-		// First click a bar to set a specific entry
 		fireEvent.click(screen.getByText("Select 14:00"));
 		expect(screen.getByText("14:00")).toBeInTheDocument();
 
-		// Mousedown inside the chart stub should NOT clear it
 		fireEvent.mouseDown(screen.getByTestId("chart-stub"));
 		expect(screen.getByText("14:00")).toBeInTheDocument();
+	});
+});
+
+describe("PriceControls price box — persists after outside interaction", () => {
+	it("renders the time and spot price in the price box on mount", () => {
+		const { container } = renderPanel();
+
+		const timeEl = container.querySelector(".price-box-time");
+		const spotEl = container.querySelector(".price-box-spot");
+
+		expect(timeEl).toBeInTheDocument();
+		expect(timeEl).toHaveTextContent(PRICE_BOX_TIME);
+		expect(spotEl).toBeInTheDocument();
+		expect(spotEl).toHaveTextContent(PRICE_BOX_SPOT);
+	});
+
+	it("price box time and spot remain after mousedown outside the chart", () => {
+		const { container } = renderPanel();
+
+		fireEvent.mouseDown(screen.getByRole("heading"));
+
+		expect(container.querySelector(".price-box-time")).toHaveTextContent(
+			PRICE_BOX_TIME,
+		);
+		expect(container.querySelector(".price-box-spot")).toHaveTextContent(
+			PRICE_BOX_SPOT,
+		);
+	});
+
+	it("price box time and spot remain after touchstart outside the chart", () => {
+		const { container } = renderPanel();
+
+		fireEvent.touchStart(screen.getByRole("heading"));
+
+		expect(container.querySelector(".price-box-time")).toHaveTextContent(
+			PRICE_BOX_TIME,
+		);
+		expect(container.querySelector(".price-box-spot")).toHaveTextContent(
+			PRICE_BOX_SPOT,
+		);
+	});
+
+	it("price box updates when a different bar is clicked", () => {
+		const { container } = renderPanel();
+
+		fireEvent.click(screen.getByText("Select 14:00"));
+
+		expect(container.querySelector(".price-box-time")).toHaveTextContent(
+			"14:00",
+		);
+		expect(container.querySelector(".price-box-spot")).toHaveTextContent(
+			PRICE_BOX_SPOT,
+		);
 	});
 });
