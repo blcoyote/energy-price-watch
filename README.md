@@ -19,7 +19,7 @@ Live day-ahead electricity prices for Denmark, built with React + TypeScript.
 ## Stack
 
 | Lag | Teknologi |
-|---|---|
+| --- | --- |
 | UI | React 19 (React Compiler) + TypeScript |
 | Build | Vite 8 |
 | Server state | TanStack Query v5 |
@@ -31,7 +31,7 @@ Live day-ahead electricity prices for Denmark, built with React + TypeScript.
 
 Koden er organiseret som **vertical slices** under `src/features/`:
 
-```
+```text
 src/
   features/
     electricity-prices/
