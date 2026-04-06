@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ChevronLeftIcon, ChevronRightIcon } from "../../../ui/icons";
 import { useElectricityPrices } from "../api/useElectricityPrices";
 import { useElectricityTariff } from "../api/useElectricityTariff";
@@ -47,12 +47,27 @@ export function ElectricityPricesPanel() {
 		includeTariff ? areaGln : null,
 	);
 
+	const chartWrapperRef = useRef<HTMLDivElement>(null);
+
 	const { selectedEntry, setSelectedEntry, liveTotal } = useSelectedEntry({
 		data,
 		tariffData,
 		currentDkHour,
 		showTomorrow,
 	});
+
+	useEffect(() => {
+		function handleMouseDown(e: MouseEvent) {
+			if (
+				chartWrapperRef.current &&
+				!chartWrapperRef.current.contains(e.target as Node)
+			) {
+				setSelectedEntry(null);
+			}
+		}
+		document.addEventListener("mousedown", handleMouseDown);
+		return () => document.removeEventListener("mousedown", handleMouseDown);
+	}, [setSelectedEntry]);
 
 	const headingLabel = usingTomorrow
 		? `I morgen — ${activeDisplayDay}`
@@ -94,7 +109,7 @@ export function ElectricityPricesPanel() {
 			)}
 
 			{data && data.length > 0 && (
-				<div className="chart-wrapper">
+				<div className="chart-wrapper" ref={chartWrapperRef}>
 					{tomorrowAvailable && (
 						<div className="chart-nav">
 							<button
