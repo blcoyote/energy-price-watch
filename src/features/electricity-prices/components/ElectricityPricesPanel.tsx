@@ -1,12 +1,12 @@
+import { useLocalStorage } from "@shared/hooks/useLocalStorage";
 import { type ReactElement, useEffect, useRef, useState } from "react";
 import { ChevronLeftIcon, ChevronRightIcon } from "../../../ui/icons";
 import { useElectricityPrices } from "../api/useElectricityPrices";
 import { useElectricityTariff } from "../api/useElectricityTariff";
 import type { DayAheadPricesQueryParams } from "../types";
-import { GRID_COMPANIES } from "../types";
+import { DINEL_TARIFF_GLN } from "../types";
 import { useDanishDateWindow } from "../useDanishDateWindow";
 import { useSelectedEntry } from "../useSelectedEntry";
-import { useLocalStorage } from "../../../shared/hooks/useLocalStorage";
 import { ElectricityPriceChart } from "./ElectricityPriceChart";
 import { PriceControls } from "./PriceControls";
 
@@ -20,10 +20,6 @@ export function ElectricityPricesPanel(): ReactElement {
 		true,
 	);
 	const [showTomorrow, setShowTomorrow] = useState(false);
-
-	const areaGln =
-		GRID_COMPANIES.find((c) => c.area === priceArea)?.gln ??
-		GRID_COMPANIES[0].gln;
 
 	const { start, end, displayDay, tomorrowAvailable, today } =
 		useDanishDateWindow();
@@ -51,7 +47,7 @@ export function ElectricityPricesPanel(): ReactElement {
 	const activeDisplayDay = usingTomorrow ? displayDay : today.start;
 
 	const { data: tariffData, isPending: tariffPending } = useElectricityTariff(
-		includeTariff ? areaGln : null,
+		includeTariff ? DINEL_TARIFF_GLN : null,
 	);
 
 	const chartWrapperRef = useRef<HTMLDivElement>(null);
@@ -90,8 +86,8 @@ export function ElectricityPricesPanel(): ReactElement {
 		? `I morgen — ${activeDisplayDay}`
 		: `I dag — ${activeDisplayDay}`;
 	const subLabel = usingTomorrow
-		? "Kommende day-ahead priser (offentliggjort efter kl. 13:00)"
-		: "Morgendagens priser frigives mellem kl. 13.00 og 14.00";
+		? "Kommende day-ahead priser inkl. moms (offentliggjort efter kl. 13:00)"
+		: "Morgendagens priser inkl. moms frigives mellem kl. 13.00 og 14.00";
 
 	return (
 		<section className="prices-panel">
@@ -111,7 +107,7 @@ export function ElectricityPricesPanel(): ReactElement {
 
 			{isPending && <p className="status-msg">Henter priser…</p>}
 			{includeTariff && tariffPending && (
-				<p className="status-msg">Henter tariffer…</p>
+				<p className="status-msg">Henter DinEl tariffer…</p>
 			)}
 			{isError && (
 				<p className="status-msg status-error">

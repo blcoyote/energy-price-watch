@@ -1,6 +1,6 @@
 import type { ReactElement } from "react";
+import type { SelectedPriceEntry } from "../types";
 import { barFill, COLOR_NOW, COLOR_NOW_TARIFF } from "./chartColors";
-import type { SelectedPriceEntry } from "./ElectricityPriceChart";
 
 type RectProps = {
 	x?: number;

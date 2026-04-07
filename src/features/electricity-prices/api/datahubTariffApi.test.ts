@@ -1,6 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { TariffRecord } from "../types";
-import { fetchHourlyTariff, getHourPrice } from "./datahubTariffApi";
+import {
+	fetchHourlyTariff,
+	getHourPrice,
+	pickConsumerTariffRecord,
+} from "./datahubTariffApi";
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 
@@ -90,15 +94,23 @@ describe("fetchHourlyTariff", () => {
 		expect(result).toHaveLength(24);
 	});
 
-	it("sums prices from multiple ChargeTypeCodes", async () => {
+	it("selects standard C tariff instead of summing multiple ChargeTypeCodes", async () => {
 		vi.setSystemTime(new Date("2026-04-06T12:00:00Z"));
 		const records = [
-			makeRecord({ ChargeTypeCode: "CD_A", Price1: 0.1 }),
-			makeRecord({ ChargeTypeCode: "CD_B", Price1: 0.05 }),
+			makeRecord({
+				ChargeTypeCode: "DT_B_02",
+				Note: "Nettarif B lav",
+				Price1: 0.05,
+			}),
+			makeRecord({
+				ChargeTypeCode: "DT_C_01",
+				Note: "Nettarif C",
+				Price1: 0.1,
+			}),
 		];
 		mockFetch(records);
 		const result = await fetchHourlyTariff("5790001089030");
-		expect(result[0]).toBeCloseTo(0.15, 4);
+		expect(result[0]).toBeCloseTo(0.1, 4);
 	});
 
 	it("deduplicates by ChargeTypeCode, keeping the latest ValidFrom", async () => {
@@ -126,15 +138,42 @@ describe("fetchHourlyTariff", () => {
 		vi.setSystemTime(new Date("2026-04-06T12:00:00Z"));
 		const records = [
 			makeRecord({
-				ChargeTypeCode: "CD_A",
+				ChargeTypeCode: "DT_C_01",
+				Note: "Nettarif C",
 				ValidTo: "2026-01-01",
 				Price1: 0.99,
 			}), // expired
-			makeRecord({ ChargeTypeCode: "CD_B", ValidTo: null, Price1: 0.05 }), // active
+			makeRecord({
+				ChargeTypeCode: "DT_B_02",
+				Note: "Nettarif B lav",
+				ValidTo: null,
+				Price1: 0.05,
+			}), // active fallback
 		];
 		mockFetch(records);
 		const result = await fetchHourlyTariff("5790001089030");
 		expect(result[0]).toBeCloseTo(0.05, 4);
+	});
+
+	it("treats ValidTo on current date as active", async () => {
+		vi.setSystemTime(new Date("2026-04-06T12:00:00Z"));
+		const records = [
+			makeRecord({
+				ChargeTypeCode: "DT_C_01",
+				Note: "Nettarif C",
+				ValidTo: "2026-04-06T00:00:00",
+				Price1: 0.2,
+			}),
+			makeRecord({
+				ChargeTypeCode: "DT_B_02",
+				Note: "Nettarif B lav",
+				ValidTo: null,
+				Price1: 0.05,
+			}),
+		];
+		mockFetch(records);
+		const result = await fetchHourlyTariff("5790001089030");
+		expect(result[0]).toBeCloseTo(0.2, 4);
 	});
 
 	it("returns all zeros when no active records exist", async () => {
@@ -153,5 +192,24 @@ describe("fetchHourlyTariff", () => {
 		await expect(fetchHourlyTariff("bad-gln")).rejects.toThrow(
 			"Internal Server Error",
 		);
+	});
+});
+
+describe("pickConsumerTariffRecord", () => {
+	it("prefers standard C tariff over local collective variants", () => {
+		const selected = pickConsumerTariffRecord([
+			makeRecord({
+				ChargeTypeCode: "31LK_C",
+				Note: "Nettarif lokal kollektiv",
+				Price1: 0.04,
+			}),
+			makeRecord({
+				ChargeTypeCode: "DT_C_01",
+				Note: "Nettarif C",
+				Price1: 0.1,
+			}),
+		]);
+
+		expect(selected?.ChargeTypeCode).toBe("DT_C_01");
 	});
 });

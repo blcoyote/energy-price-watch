@@ -10,8 +10,9 @@ import {
 	XAxis,
 	YAxis,
 } from "recharts";
+import type { SelectedPriceEntry } from "../types";
 import type { ElectricityPriceChartPoint } from "../utils";
-import { toKwh } from "../utils";
+import { composeConsumerPrice } from "../utils";
 import {
 	makeSpotBarBackground,
 	makeSpotBarShape,
@@ -20,14 +21,6 @@ import {
 import { ChartLegend } from "./ChartLegend";
 import { ChartTooltip } from "./ChartTooltip";
 import { COLOR_NOW } from "./chartColors";
-
-export type SelectedPriceEntry = {
-	time: string;
-	timestamp: string;
-	spotDKK: number;
-	tariffDKK: number;
-	totalDKK: number;
-};
 
 type Props = {
 	data: ElectricityPriceChartPoint[];
@@ -48,15 +41,21 @@ export function ElectricityPriceChart({
 	onBarClick,
 }: Props): ReactElement {
 	const chartData: SelectedPriceEntry[] = data.map((d) => {
-		const spot = toKwh(d.priceDKK);
 		const hourIndex = parseInt(d.timestamp.slice(11, 13), 10);
-		const tariffVal = tariff != null ? (tariff[hourIndex] ?? 0) : 0;
+		const tariffValExVat = tariff != null ? (tariff[hourIndex] ?? 0) : 0;
+		const extraFeesExVat = tariff != null ? undefined : 0;
+		const prices = composeConsumerPrice(
+			d.priceDKK,
+			tariffValExVat,
+			extraFeesExVat,
+		);
 		return {
 			time: d.time,
 			timestamp: d.timestamp,
-			spotDKK: spot,
-			tariffDKK: tariffVal,
-			totalDKK: Math.round((spot + tariffVal) * 100) / 100,
+			spotMwhDKK: d.priceDKK,
+			spotDKK: prices.spotDKK,
+			tariffDKK: prices.tariffDKK,
+			totalDKK: prices.totalDKK,
 		};
 	});
 

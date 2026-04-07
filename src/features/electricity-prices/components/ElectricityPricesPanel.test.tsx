@@ -2,7 +2,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import type { SelectedPriceEntry } from "./ElectricityPriceChart";
+import type { SelectedPriceEntry } from "../types";
 import { ElectricityPricesPanel } from "./ElectricityPricesPanel";
 
 // ── Stubs ─────────────────────────────────────────────────────────────────────
@@ -51,9 +51,10 @@ vi.mock("./ElectricityPriceChart", () => ({
 					onBarClick?.({
 						time: "14:00",
 						timestamp: "2026-04-06T14:00:00",
-						spotDKK: 0.5,
+						spotMwhDKK: 500,
+						spotDKK: 0.63,
 						tariffDKK: 0,
-						totalDKK: 0.5,
+						totalDKK: 0.63,
 					})
 				}
 			>
@@ -76,10 +77,11 @@ function renderPanel() {
 
 // ── Tests ─────────────────────────────────────────────────────────────────────
 
-// FAKE_DATA has priceDKK: 500 → toKwh(500) = 0.50, hour 10 is auto-selected.
+// FAKE_DATA has priceDKK: 500 -> 0.50 ex VAT -> 0.63 incl. VAT, hour 10 is auto-selected.
 // The price box in PriceControls renders these two unique strings:
 const PRICE_BOX_TIME = "10:00";
-const PRICE_BOX_SPOT = "0.50 kr/kWh"; // price-box-spot: spotDKK.toFixed(2)
+const PRICE_BOX_SPOT = "0.63 kr/kWh inkl. moms";
+const PRICE_BOX_TOTAL = "0.63 kr/kWh inkl. moms";
 
 describe("ElectricityPricesPanel — outside-click dismisses chart tooltip", () => {
 	it("auto-selects the current hour on mount", () => {
@@ -122,11 +124,14 @@ describe("PriceControls price box — persists after outside interaction", () =>
 
 		const timeEl = container.querySelector(".price-box-time");
 		const spotEl = container.querySelector(".price-box-spot");
+		const totalEl = container.querySelector(".price-box-total-val");
 
 		expect(timeEl).toBeInTheDocument();
 		expect(timeEl).toHaveTextContent(PRICE_BOX_TIME);
 		expect(spotEl).toBeInTheDocument();
 		expect(spotEl).toHaveTextContent(PRICE_BOX_SPOT);
+		expect(totalEl).toBeInTheDocument();
+		expect(totalEl).toHaveTextContent(PRICE_BOX_TOTAL);
 	});
 
 	it("price box time and spot remain after mousedown outside the chart", () => {

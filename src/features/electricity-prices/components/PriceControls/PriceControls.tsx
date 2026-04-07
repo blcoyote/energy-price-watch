@@ -1,5 +1,5 @@
 import type { ReactElement } from "react";
-import type { SelectedPriceEntry } from "../ElectricityPriceChart";
+import type { SelectedPriceEntry } from "../../types";
 import { PriceAreaControl } from "./PriceAreaControl";
 import { SelectedPriceBox } from "./SelectedPriceBox";
 import { TariffToggle } from "./TariffToggle";

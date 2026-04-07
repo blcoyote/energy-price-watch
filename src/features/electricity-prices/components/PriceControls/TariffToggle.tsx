@@ -20,7 +20,7 @@ export function TariffToggle({
 					onChange={(e) => onChange(e.target.checked)}
 					className="switch-input"
 				/>
-				Inkluder tariffer
+				Inkluder tariffer og afgifter
 			</label>
 		</div>
 	);

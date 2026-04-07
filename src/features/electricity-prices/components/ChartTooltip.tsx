@@ -1,9 +1,9 @@
+import type { ReactElement } from "react";
 import type {
 	NameType,
 	Payload,
 	ValueType,
 } from "recharts/types/component/DefaultTooltipContent";
-import type { ReactElement } from "react";
 import type { TooltipContentProps } from "recharts/types/component/Tooltip";
 
 export function ChartTooltip({
@@ -23,13 +23,13 @@ export function ChartTooltip({
 					/>
 					<span className="chart-tooltip-name">
 						{entry.name === "spotDKK"
-							? "Spotpris"
+							? "Spotpris (inkl. moms)"
 							: entry.name === "tariffDKK"
-								? "Tarif"
+								? "Tariffer og afgifter (inkl. moms)"
 								: entry.name}
 					</span>
 					<span className="chart-tooltip-value">
-						{Number(entry.value).toFixed(2)} DKK/kWh
+						{Number(entry.value).toFixed(2)} DKK/kWh inkl. moms
 					</span>
 				</p>
 			))}

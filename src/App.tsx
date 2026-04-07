@@ -1,7 +1,7 @@
 import { ElectricityPricesPanel } from "@features/electricity-prices";
 import { type ReactElement, useEffect, useState } from "react";
 import "./App.css";
-import { useLocalStorage } from "./shared/hooks/useLocalStorage";
+import { useLocalStorage } from "@shared/hooks/useLocalStorage";
 import { CompressIcon, ExpandIcon, MoonIcon, SunIcon } from "./ui/icons";
 
 const isPwa = window.matchMedia("(display-mode: standalone)").matches;

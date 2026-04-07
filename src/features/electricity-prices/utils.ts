@@ -1,4 +1,23 @@
+import { getFeeSchedule, sumFeeSchedule } from "./publicFees";
 import type { DayAheadPrice } from "./types";
+
+export const DK_VAT_RATE = 0.25;
+
+export type ConsumerPriceBreakdown = {
+	spotDKK: number;
+	tariffDKK: number;
+	totalDKK: number;
+};
+
+/**
+ * Returns the total public electricity fees (DKK/kWh, ex VAT) for the given year.
+ * Defaults to the current calendar year; falls back to the most recent known schedule.
+ */
+export function getPublicFeesExVatPerKwh(
+	year = new Date().getFullYear(),
+): number {
+	return sumFeeSchedule(getFeeSchedule(year));
+}
 
 export type ElectricityPriceChartPoint = {
 	// Local Danish time formatted for display (e.g. "14:00")
@@ -50,7 +69,38 @@ export function toElectricityChartData(
 	);
 }
 
+function roundTo2(value: number): number {
+	return Math.sign(value) * (Math.round(Math.abs(value) * 100) / 100);
+}
+
+/** Apply Danish VAT and return a consumer-facing DKK/kWh price. */
+export function toConsumerPrice(
+	valueExVat: number,
+	vatRate = DK_VAT_RATE,
+): number {
+	return roundTo2(valueExVat * (1 + vatRate));
+}
+
+/**
+ * Compose consumer-facing prices from raw inputs.
+ * Spot input is DKK/MWh from DayAheadPrices; tariff is DKK/kWh.
+ */
+export function composeConsumerPrice(
+	spotMwhDKK: number,
+	tariffKwhDKK = 0,
+	extraKwhDKK = getPublicFeesExVatPerKwh(),
+): ConsumerPriceBreakdown {
+	const spotExVat = spotMwhDKK / 1000;
+	const spotDKK = toConsumerPrice(spotExVat);
+	const tariffDKK = toConsumerPrice(tariffKwhDKK + extraKwhDKK);
+	return {
+		spotDKK,
+		tariffDKK,
+		totalDKK: roundTo2(spotDKK + tariffDKK),
+	};
+}
+
 /** Convert MWh price → kWh price, rounded to 2 decimal places. */
 export function toKwh(mwhPrice: number): number {
-	return Math.round((mwhPrice / 1000) * 100) / 100;
+	return roundTo2(mwhPrice / 1000);
 }

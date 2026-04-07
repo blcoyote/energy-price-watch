@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import type { SelectedPriceEntry } from "./components/ElectricityPriceChart";
+import type { SelectedPriceEntry } from "./types";
 import type { ElectricityPriceChartPoint } from "./utils";
-import { toKwh } from "./utils";
+import { composeConsumerPrice } from "./utils";
 
 type Params = {
 	data: ElectricityPriceChartPoint[] | undefined;
@@ -43,15 +43,21 @@ export function useSelectedEntry({
 		);
 		if (defaultEntry) {
 			initialised.current = true;
-			const tariffVal =
+			const tariffValExVat =
 				tariffData != null ? (tariffData[currentDkHour] ?? 0) : 0;
-			const spot = toKwh(defaultEntry.priceDKK);
+			const extraFeesExVat = tariffData != null ? undefined : 0;
+			const prices = composeConsumerPrice(
+				defaultEntry.priceDKK,
+				tariffValExVat,
+				extraFeesExVat,
+			);
 			setSelectedEntry({
 				time: defaultEntry.time,
 				timestamp: defaultEntry.timestamp,
-				spotDKK: spot,
-				tariffDKK: tariffVal,
-				totalDKK: Math.round((spot + tariffVal) * 100) / 100,
+				spotMwhDKK: defaultEntry.priceDKK,
+				spotDKK: prices.spotDKK,
+				tariffDKK: prices.tariffDKK,
+				totalDKK: prices.totalDKK,
 			});
 		}
 	}, [data, tariffData, currentDkHour, showTomorrow]);
@@ -59,10 +65,15 @@ export function useSelectedEntry({
 	const priceBoxHour = selectedEntry
 		? parseInt(selectedEntry.timestamp.slice(11, 13), 10)
 		: 0;
-	const liveTariff =
+	const liveTariffExVat =
 		selectedEntry && tariffData != null ? (tariffData[priceBoxHour] ?? 0) : 0;
+	const liveExtraFeesExVat = tariffData != null ? undefined : 0;
 	const liveTotal = selectedEntry
-		? Math.round((selectedEntry.spotDKK + liveTariff) * 100) / 100
+		? composeConsumerPrice(
+				selectedEntry.spotMwhDKK,
+				liveTariffExVat,
+				liveExtraFeesExVat,
+			).totalDKK
 		: 0;
 
 	return { selectedEntry, setSelectedEntry, liveTotal };

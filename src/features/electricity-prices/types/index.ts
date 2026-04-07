@@ -30,6 +30,8 @@ export type TariffRecord = {
 	GLN_Number: string;
 	ChargeType: string; // D01=Subscription D02=Fee D03=Tariff
 	ChargeTypeCode: string;
+	Note?: string;
+	Description?: string;
 	ValidFrom: string; // YYYY-MM-DD
 	ValidTo: string | null;
 	Price1: number | null; // DKK/kWh, hour 00:00–01:00 DK
@@ -64,6 +66,21 @@ export type GridCompany = {
 	name: string;
 	gln: string;
 	area: "DK1" | "DK2";
+};
+
+export const DINEL_TARIFF_GLN = "5790000610099";
+
+export type SelectedPriceEntry = {
+	time: string;
+	timestamp: string;
+	/** Raw spot price from DayAheadPrices, DKK/MWh (ex VAT). */
+	spotMwhDKK: number;
+	/** Consumer-facing spot price, DKK/kWh (incl VAT). */
+	spotDKK: number;
+	/** Consumer-facing non-spot price, DKK/kWh (incl VAT): local tariff + public fees/taxes. */
+	tariffDKK: number;
+	/** Consumer-facing total price, DKK/kWh (incl VAT). */
+	totalDKK: number;
 };
 
 export const GRID_COMPANIES: GridCompany[] = [
