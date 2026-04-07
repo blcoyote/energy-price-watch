@@ -13,6 +13,8 @@ export function ChartLegend(): ReactElement {
 		>
 			<LegendItem fill="hsl(221, 83%, 62%)" label="Spotpris" />
 			<LegendItem fill="hsl(221, 83%, 44%)" label="Tarif" />
+			<LegendItem fill="hsl(142, 71%, 62%)" label="Laveste" />
+			<LegendItem fill="hsl(0, 72%, 62%)" label="Højeste" />
 		</div>
 	);
 }
