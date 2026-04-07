@@ -11,12 +11,37 @@ Live day-ahead electricity prices for Denmark, built with React + TypeScript.
 ## What does it do?
 
 - Fetches **day-ahead spot prices** for DK1 (West) and DK2 (East) from [Energi Data Service](https://www.energidataservice.dk/tso-electricity/DayAheadPrices)
-- Fetches **grid tariffs** (hourly energy tariffs only, `ResolutionDuration: PT1H`) via [DatahubPricelist](https://www.energidataservice.dk/datahub/DatahubPricelist) and adds them on top of the spot price
-- Shows **tomorrow's prices** via chevron buttons above the chart — available from 13:00 when Nord Pool publishes them
-- Highlights the **current hour** in orange with a reference line
-- Clickable bar chart — select an hour to see the spot and total price
+- Fetches **grid tariffs** (hourly energy tariffs only, `ResolutionDuration: PT1H`) via [DatahubPricelist](https://www.energidataservice.dk/datahub/DatahubPricelist) for your configured net company and adds them on top of the spot price
+- Includes **public fees** (elafgift, Energinet system tariff, transmission tariff) on top of the tariff — all ex VAT, multiplied by 1.25
+- Shows **tomorrow's prices** via chevron navigation — available after ~13:00 when Nord Pool publishes them
+- Highlights the **current hour** in the chart with a reference line
+- Clickable bar chart — select an hour to see the spot price and total consumer price
 - Bars are colour-coded: **green** = cheapest, **red** = most expensive, **blue** = the rest
-- Automatically refreshes once per hour
+- Toggle tariffs and fees on/off to compare spot-only vs total consumer price
+- **Dark/light mode** toggle, follows system preference by default
+- **Fullscreen** button for wall-display or PWA use
+- Automatically refreshes once per hour; price area and tariff toggle are persisted in `localStorage`
+
+## Configuring your net company
+
+Edit `src/config.ts` and set `MY_GRID_COMPANY` to your DSO:
+
+```ts
+export const MY_GRID_COMPANY: GridCompanyId = "dinel";
+```
+
+Valid values:
+
+| ID | Company | Area |
+| --- | --- | --- |
+| `radius` | Radius Elnet | DK2 – Greater Copenhagen |
+| `cerius` | Cerius | DK2 – North Zealand |
+| `n1` | N1 | DK1 – North/Mid Jutland |
+| `trefor` | TREFOR El-net | DK1 – South Jutland |
+| `konstant` | Konstant Net | DK1 – Mid Jutland |
+| `dinel` | Dinel | DK1 – Mid Jutland |
+
+TypeScript will error at build time if the value is not a valid ID.
 
 ## Stack
 
@@ -38,16 +63,20 @@ Code is organised as **vertical slices** under `src/features/`:
 src/
   features/
     electricity-prices/
-      api/          # TanStack Query hooks + fetch functions
-      components/   # ElectricityPriceChart
-      types/        # TypeScript interfaces + grid companies
-      utils.ts      # toKwh, toElectricityChartData
+      api/                  # TanStack Query hooks + fetch functions
+      components/           # ElectricityPriceChart, PriceControls
+      types/                # TypeScript interfaces, GridCompanyId, GRID_COMPANIES
+      config.ts             # User-facing net company config (MY_GRID_COMPANY)
+      publicFees.ts         # Year-keyed public fee schedules (elafgift, Energinet)
+      utils.ts              # Price composition helpers, chart data shaping
       useDanishDateWindow.ts
-      index.ts      # Public barrel export
+      useSelectedEntry.ts
+      index.ts              # Public barrel export
   shared/
-    api/            # ApiError
+    api/                    # ApiError
+    hooks/                  # useLocalStorage
   ui/
-    icons.tsx       # SVG icon components
+    icons/                  # SVG icon components
   App.tsx
   main.tsx
 ```

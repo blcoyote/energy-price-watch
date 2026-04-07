@@ -62,13 +62,19 @@ export type TariffRecord = {
 	ResolutionDuration: string;
 };
 
+export type GridCompanyId =
+	| "radius"
+	| "cerius"
+	| "n1"
+	| "trefor"
+	| "konstant"
+	| "dinel";
+
 export type GridCompany = {
 	name: string;
 	gln: string;
 	area: "DK1" | "DK2";
 };
-
-export const DINEL_TARIFF_GLN = "5790000610099";
 
 export type SelectedPriceEntry = {
 	time: string;
@@ -83,22 +89,35 @@ export type SelectedPriceEntry = {
 	totalDKK: number;
 };
 
-export const GRID_COMPANIES: GridCompany[] = [
-	{
+export const GRID_COMPANIES: Record<GridCompanyId, GridCompany> = {
+	radius: {
 		name: "Radius Elnet (DK2 – Greater Copenhagen)",
 		gln: "5790000705689",
 		area: "DK2",
 	},
-	{ name: "Cerius (DK2 – North Zealand)", gln: "5790000705184", area: "DK2" },
-	{ name: "N1 (DK1 – North/Mid Jutland)", gln: "5790001089030", area: "DK1" },
-	{
+	cerius: {
+		name: "Cerius (DK2 – North Zealand)",
+		gln: "5790000705184",
+		area: "DK2",
+	},
+	n1: {
+		name: "N1 (DK1 – North/Mid Jutland)",
+		gln: "5790001089030",
+		area: "DK1",
+	},
+	trefor: {
 		name: "TREFOR El-net (DK1 – South Jutland)",
 		gln: "5790000392261",
 		area: "DK1",
 	},
-	{
+	konstant: {
 		name: "Konstant Net (DK1 – Mid Jutland)",
 		gln: "5790000375318",
 		area: "DK1",
 	},
-];
+	dinel: {
+		name: "Dinel (DK1 – Mid Jutland)",
+		gln: "5790000610099",
+		area: "DK1",
+	},
+};

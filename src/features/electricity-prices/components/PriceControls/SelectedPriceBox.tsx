@@ -15,9 +15,7 @@ export function SelectedPriceBox({
 	return (
 		<div className="control-group price-box">
 			<span className="price-box-time">kl. {entry.time}</span>
-			<span className="price-box-spot">
-				{entry.spotDKK.toFixed(2)} kr/kWh
-			</span>
+			<span className="price-box-spot">{entry.spotDKK.toFixed(2)} kr/kWh</span>
 			{showTotal && (
 				<span className="price-box-total-val">
 					{liveTotal.toFixed(2)} kr/kWh

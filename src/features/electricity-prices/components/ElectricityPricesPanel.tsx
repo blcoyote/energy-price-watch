@@ -1,10 +1,11 @@
 import { useLocalStorage } from "@shared/hooks/useLocalStorage";
 import { type ReactElement, useEffect, useRef, useState } from "react";
+import { MY_GRID_COMPANY } from "../../../config";
 import { ChevronLeftIcon, ChevronRightIcon } from "../../../ui/icons";
 import { useElectricityPrices } from "../api/useElectricityPrices";
 import { useElectricityTariff } from "../api/useElectricityTariff";
 import type { DayAheadPricesQueryParams } from "../types";
-import { DINEL_TARIFF_GLN } from "../types";
+import { GRID_COMPANIES } from "../types";
 import { useDanishDateWindow } from "../useDanishDateWindow";
 import { useSelectedEntry } from "../useSelectedEntry";
 import { ElectricityPriceChart } from "./ElectricityPriceChart";
@@ -47,7 +48,7 @@ export function ElectricityPricesPanel(): ReactElement {
 	const activeDisplayDay = usingTomorrow ? displayDay : today.start;
 
 	const { data: tariffData, isPending: tariffPending } = useElectricityTariff(
-		includeTariff ? DINEL_TARIFF_GLN : null,
+		includeTariff ? GRID_COMPANIES[MY_GRID_COMPANY].gln : null,
 	);
 
 	const chartWrapperRef = useRef<HTMLDivElement>(null);

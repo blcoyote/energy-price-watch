@@ -6,9 +6,10 @@ export type {
 	DayAheadPrice,
 	DayAheadPricesQueryParams,
 	GridCompany,
+	GridCompanyId,
 	SelectedPriceEntry,
 } from "./types";
-export { DINEL_TARIFF_GLN, GRID_COMPANIES } from "./types";
+export { GRID_COMPANIES } from "./types";
 export type { DateWindow } from "./useDanishDateWindow";
 export {
 	computeDateWindowFromDate,
