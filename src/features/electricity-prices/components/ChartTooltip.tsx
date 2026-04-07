@@ -23,13 +23,13 @@ export function ChartTooltip({
 					/>
 					<span className="chart-tooltip-name">
 						{entry.name === "spotDKK"
-							? "Spotpris (inkl. moms)"
+							? "Spotpris"
 							: entry.name === "tariffDKK"
-								? "Tariffer og afgifter (inkl. moms)"
+								? "Tariffer og afgifter"
 								: entry.name}
 					</span>
 					<span className="chart-tooltip-value">
-						{Number(entry.value).toFixed(2)} DKK/kWh inkl. moms
+						{Number(entry.value).toFixed(2)} DKK/kWh
 					</span>
 				</p>
 			))}
