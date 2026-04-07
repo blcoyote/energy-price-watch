@@ -3,6 +3,8 @@ import { type ReactElement, useEffect, useState } from "react";
 import "./App.css";
 import { CompressIcon, ExpandIcon, MoonIcon, SunIcon } from "./ui/icons";
 
+const isPwa = window.matchMedia("(display-mode: standalone)").matches;
+
 export default function App(): ReactElement {
 	const [darkMode, setDarkMode] = useState(true);
 	const [isFullscreen, setIsFullscreen] = useState(false);
@@ -40,14 +42,16 @@ export default function App(): ReactElement {
 				>
 					{darkMode ? <SunIcon /> : <MoonIcon />}
 				</button>
-				<button
-					type="button"
-					className="toolbar-btn"
-					onClick={toggleFullscreen}
-					aria-label={isFullscreen ? "Afslut fuld skærm" : "Fuld skærm"}
-				>
-					{isFullscreen ? <CompressIcon /> : <ExpandIcon />}
-				</button>
+				{!isPwa && (
+					<button
+						type="button"
+						className="toolbar-btn"
+						onClick={toggleFullscreen}
+						aria-label={isFullscreen ? "Afslut fuld skærm" : "Fuld skærm"}
+					>
+						{isFullscreen ? <CompressIcon /> : <ExpandIcon />}
+					</button>
+				)}
 			</div>
 			<ElectricityPricesPanel />
 		</div>
