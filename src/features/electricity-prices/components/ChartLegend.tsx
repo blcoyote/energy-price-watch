@@ -11,10 +11,10 @@ export function ChartLegend(): ReactElement {
 				marginTop: "0.25rem",
 			}}
 		>
-			<LegendItem fill="hsl(221, 83%, 62%)" label="Spotpris (inkl. moms)" />
+			<LegendItem fill="hsl(221, 83%, 62%)" label="Spotpris" />
 			<LegendItem
 				fill="hsl(221, 83%, 44%)"
-				label="Tariffer og afgifter (inkl. moms)"
+				label="Tariffer og afgifter"
 			/>
 			<LegendItem fill="hsl(142, 71%, 62%)" label="Laveste" />
 			<LegendItem fill="hsl(0, 72%, 62%)" label="Højeste" />
