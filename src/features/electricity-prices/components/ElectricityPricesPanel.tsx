@@ -71,12 +71,22 @@ export function ElectricityPricesPanel(): ReactElement {
 				chartWrapperRef.current &&
 				!chartWrapperRef.current.contains(e.target as Node)
 			) {
-				// Dismiss the Recharts tooltip by simulating a mouse-leave on its
-				// wrapper. This keeps selectedEntry (and the controls price box) alive.
 				const rechartsWrapper =
 					chartWrapperRef.current.querySelector(".recharts-wrapper");
+				// React synthesizes onMouseLeave from "mouseout" (which bubbles);
+				// dispatching "mouseleave" directly never reaches React's delegated
+				// listener. Setting relatedTarget to document.body signals that the
+				// cursor left the chart area entirely.
 				rechartsWrapper?.dispatchEvent(
-					new MouseEvent("mouseleave", { bubbles: true }),
+					new MouseEvent("mouseout", {
+						bubbles: true,
+						relatedTarget: document.body,
+					}),
+				);
+				// On mobile, tooltips are activated via touch events rather than mouse
+				// events. Dispatching "touchend" clears any touch-activated tooltip.
+				rechartsWrapper?.dispatchEvent(
+					new TouchEvent("touchend", { bubbles: true }),
 				);
 			}
 		}
