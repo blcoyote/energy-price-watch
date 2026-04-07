@@ -14,13 +14,13 @@ export function SelectedPriceBox({
 }: SelectedPriceBoxProps): ReactElement {
 	return (
 		<div className="control-group price-box">
-			<span className="price-box-time">{entry.time}</span>
+			<span className="price-box-time">kl. {entry.time}</span>
 			<span className="price-box-spot">
-				{entry.spotDKK.toFixed(2)} kr/kWh inkl. moms
+				{entry.spotDKK.toFixed(2)} kr/kWh
 			</span>
 			{showTotal && (
 				<span className="price-box-total-val">
-					{liveTotal.toFixed(2)} kr/kWh inkl. moms
+					{liveTotal.toFixed(2)} kr/kWh
 				</span>
 			)}
 		</div>
