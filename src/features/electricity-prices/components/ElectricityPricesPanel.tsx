@@ -6,12 +6,19 @@ import type { DayAheadPricesQueryParams } from "../types";
 import { GRID_COMPANIES } from "../types";
 import { useDanishDateWindow } from "../useDanishDateWindow";
 import { useSelectedEntry } from "../useSelectedEntry";
+import { useLocalStorage } from "../../../shared/hooks/useLocalStorage";
 import { ElectricityPriceChart } from "./ElectricityPriceChart";
 import { PriceControls } from "./PriceControls";
 
 export function ElectricityPricesPanel(): ReactElement {
-	const [priceArea, setPriceArea] = useState<"DK1" | "DK2">("DK1");
-	const [includeTariff, setIncludeTariff] = useState(true);
+	const [priceArea, setPriceArea] = useLocalStorage<"DK1" | "DK2">(
+		"epw:price-area",
+		"DK1",
+	);
+	const [includeTariff, setIncludeTariff] = useLocalStorage(
+		"epw:include-tariff",
+		true,
+	);
 	const [showTomorrow, setShowTomorrow] = useState(false);
 
 	const areaGln =

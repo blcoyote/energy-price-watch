@@ -1,12 +1,19 @@
 import { ElectricityPricesPanel } from "@features/electricity-prices";
 import { type ReactElement, useEffect, useState } from "react";
 import "./App.css";
+import { useLocalStorage } from "./shared/hooks/useLocalStorage";
 import { CompressIcon, ExpandIcon, MoonIcon, SunIcon } from "./ui/icons";
 
 const isPwa = window.matchMedia("(display-mode: standalone)").matches;
+const systemDarkPreference = window.matchMedia(
+	"(prefers-color-scheme: dark)",
+).matches;
 
 export default function App(): ReactElement {
-	const [darkMode, setDarkMode] = useState(true);
+	const [darkMode, setDarkMode] = useLocalStorage(
+		"epw:dark-mode",
+		systemDarkPreference,
+	);
 	const [isFullscreen, setIsFullscreen] = useState(false);
 
 	useEffect(() => {
@@ -35,7 +42,7 @@ export default function App(): ReactElement {
 				<button
 					type="button"
 					className="toolbar-btn"
-					onClick={() => setDarkMode((d) => !d)}
+					onClick={() => setDarkMode(!darkMode)}
 					aria-label={
 						darkMode ? "Skift til lystilstand" : "Skift til mørktilstand"
 					}
