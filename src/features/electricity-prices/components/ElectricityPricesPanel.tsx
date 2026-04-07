@@ -86,8 +86,8 @@ export function ElectricityPricesPanel(): ReactElement {
 		? `I morgen — ${activeDisplayDay}`
 		: `I dag — ${activeDisplayDay}`;
 	const subLabel = usingTomorrow
-		? "Kommende day-ahead priser inkl. moms (offentliggjort efter kl. 13:00)"
-		: "Morgendagens priser inkl. moms frigives mellem kl. 13.00 og 14.00";
+		? "Kommende day-ahead priser (offentliggjort efter kl. 13:00)"
+		: "Morgendagens priser frigives mellem kl. 13.00 og 14.00";
 
 	return (
 		<section className="prices-panel">
