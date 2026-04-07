@@ -41,7 +41,12 @@ export function ElectricityPricesPanel(): ReactElement {
 	const { data: tomorrowData, isPending: tomorrowPending } =
 		useElectricityPrices(tomorrowParams, { enabled: tomorrowAvailable });
 
-	const usingTomorrow = showTomorrow && tomorrowAvailable;
+	const tomorrowHasData =
+		tomorrowData != null &&
+		tomorrowData.length > 0 &&
+		tomorrowData.some((p) => p.priceDKK !== 0);
+
+	const usingTomorrow = showTomorrow && tomorrowHasData;
 	const data = usingTomorrow ? tomorrowData : todayData;
 	const currentDkHour = usingTomorrow ? undefined : today.currentDkHour;
 	const isPending = usingTomorrow ? tomorrowPending : todayPending;
@@ -124,7 +129,7 @@ export function ElectricityPricesPanel(): ReactElement {
 
 			{data && data.length > 0 && (
 				<div className="chart-wrapper" ref={chartWrapperRef}>
-					{tomorrowAvailable && (
+				{tomorrowHasData && (
 						<div className="chart-nav">
 							<button
 								type="button"

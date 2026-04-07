@@ -5,7 +5,7 @@ export type DayAheadPrice = {
 	TimeDK: string; // ISO 8601, Danish local time — interval start
 	PriceArea: "DK1" | "DK2" | "DE" | "NO2" | "SE3" | "SE4";
 	DayAheadPriceEUR: number; // EUR per MWh
-	DayAheadPriceDKK: number; // DKK per MWh
+	DayAheadPriceDKK: number | null; // DKK per MWh — null when EUR price exists but DKK conversion is unavailable
 };
 
 // Envelope returned by the Energi Data Service API

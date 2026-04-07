@@ -42,16 +42,17 @@ export function toElectricityChartData(
 	>();
 
 	for (const r of records) {
+		const dkk = r.DayAheadPriceDKK ?? 0;
 		const hourKey = r.TimeDK.slice(0, 13); // "YYYY-MM-DDTHH"
 		const existing = hourMap.get(hourKey);
 		if (existing) {
 			existing.sumEUR += r.DayAheadPriceEUR;
-			existing.sumDKK += r.DayAheadPriceDKK;
+			existing.sumDKK += dkk;
 			existing.count += 1;
 		} else {
 			hourMap.set(hourKey, {
 				sumEUR: r.DayAheadPriceEUR,
-				sumDKK: r.DayAheadPriceDKK,
+				sumDKK: dkk,
 				count: 1,
 				timeDK: r.TimeDK,
 			});
