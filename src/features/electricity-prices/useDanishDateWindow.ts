@@ -5,6 +5,8 @@ export type DateWindow = {
 	end: string;
 	displayDay: string;
 	tomorrowAvailable: boolean;
+	/** Whether the day-navigation buttons should be shown (DK hour >= 14). */
+	tomorrowNavVisible: boolean;
 	/** Current Danish hour (0-23), or undefined when showing tomorrow's prices. */
 	currentDkHour: number | undefined;
 	/** Today's date range, always available as a fallback. */
@@ -39,6 +41,8 @@ export function computeDateWindowFromDate(now: Date): DateWindow {
 
 	// Next-day prices are published by Nord Pool around 12:00–13:00 DK time
 	const tomorrowAvailable = dkHour >= 13;
+	// Navigation buttons are only shown from 14:00 to avoid showing incomplete data
+	const tomorrowNavVisible = dkHour >= 14;
 
 	return tomorrowAvailable
 		? {
@@ -46,6 +50,7 @@ export function computeDateWindowFromDate(now: Date): DateWindow {
 				end: dayAfterStr,
 				displayDay: tomorrowStr,
 				tomorrowAvailable: true,
+				tomorrowNavVisible,
 				currentDkHour: undefined,
 				today: { start: todayStr, end: tomorrowStr, currentDkHour: dkHour },
 			}
@@ -54,6 +59,7 @@ export function computeDateWindowFromDate(now: Date): DateWindow {
 				end: tomorrowStr,
 				displayDay: todayStr,
 				tomorrowAvailable: false,
+				tomorrowNavVisible: false,
 				currentDkHour: dkHour,
 				today: { start: todayStr, end: tomorrowStr, currentDkHour: dkHour },
 			};

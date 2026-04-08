@@ -8,4 +8,5 @@ export const electricityPriceKeys = {
 	tariffs: () => [...electricityPriceKeys.all, "tariffs"] as const,
 	tariff: (glnNumber: string) =>
 		[...electricityPriceKeys.tariffs(), glnNumber] as const,
+	exchangeRate: () => [...electricityPriceKeys.all, "exchange-rate"] as const,
 };

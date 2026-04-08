@@ -13,6 +13,7 @@ vi.mock("../useDanishDateWindow", () => ({
 		end: "2026-04-08",
 		displayDay: "2026-04-06",
 		tomorrowAvailable: false,
+		tomorrowNavVisible: false,
 		currentDkHour: 10,
 		today: { start: "2026-04-06", end: "2026-04-07", currentDkHour: 10 },
 	}),
@@ -80,41 +81,41 @@ function renderPanel() {
 // FAKE_DATA has priceDKK: 500 -> 0.50 ex VAT -> 0.63 incl. VAT, hour 10 is auto-selected.
 // The price box in PriceControls renders these two unique strings:
 const PRICE_BOX_TIME = "10:00";
-const PRICE_BOX_SPOT = "0.63 kr/kWh inkl. moms";
-const PRICE_BOX_TOTAL = "0.63 kr/kWh inkl. moms";
+const PRICE_BOX_SPOT = "0.63 kr/kWh";
+const PRICE_BOX_TOTAL = "0.63 kr/kWh";
 
 describe("ElectricityPricesPanel — outside-click dismisses chart tooltip", () => {
 	it("auto-selects the current hour on mount", () => {
 		renderPanel();
-		expect(screen.getByText("10:00")).toBeInTheDocument();
+		expect(screen.getByText("kl. 10:00")).toBeInTheDocument();
 	});
 
 	it("keeps the price box when mousedown fires outside the chart wrapper", () => {
 		renderPanel();
-		expect(screen.getByText("10:00")).toBeInTheDocument();
+		expect(screen.getByText("kl. 10:00")).toBeInTheDocument();
 
 		fireEvent.mouseDown(screen.getByRole("heading"));
 
 		// Price box should still be visible — only the internal Recharts tooltip is dismissed
-		expect(screen.getByText("10:00")).toBeInTheDocument();
+		expect(screen.getByText("kl. 10:00")).toBeInTheDocument();
 	});
 
 	it("keeps the price box when touchstart fires outside the chart wrapper", () => {
 		renderPanel();
-		expect(screen.getByText("10:00")).toBeInTheDocument();
+		expect(screen.getByText("kl. 10:00")).toBeInTheDocument();
 
 		fireEvent.touchStart(screen.getByRole("heading"));
 
-		expect(screen.getByText("10:00")).toBeInTheDocument();
+		expect(screen.getByText("kl. 10:00")).toBeInTheDocument();
 	});
 
 	it("keeps the selection when mousedown fires inside the chart wrapper", () => {
 		renderPanel();
 		fireEvent.click(screen.getByText("Select 14:00"));
-		expect(screen.getByText("14:00")).toBeInTheDocument();
+		expect(screen.getByText("kl. 14:00")).toBeInTheDocument();
 
 		fireEvent.mouseDown(screen.getByTestId("chart-stub"));
-		expect(screen.getByText("14:00")).toBeInTheDocument();
+		expect(screen.getByText("kl. 14:00")).toBeInTheDocument();
 	});
 });
 

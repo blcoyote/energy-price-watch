@@ -19,6 +19,7 @@ describe("computeDateWindowFromDate", () => {
 	it("shows today when DK hour is before 13:00", () => {
 		const result = computeDateWindowFromDate(dkTime(12));
 		expect(result.tomorrowAvailable).toBe(false);
+		expect(result.tomorrowNavVisible).toBe(false);
 		expect(result.displayDay).toBe("2026-04-06");
 		expect(result.start).toBe("2026-04-06");
 		expect(result.end).toBe("2026-04-07");
@@ -26,19 +27,33 @@ describe("computeDateWindowFromDate", () => {
 		expect(result.currentDkHour).not.toBeUndefined();
 	});
 
-	it("shows tomorrow when DK hour is exactly 13:00", () => {
+	it("shows tomorrow when DK hour is exactly 13:00 but nav is hidden", () => {
 		const result = computeDateWindowFromDate(dkTime(13));
 		expect(result.tomorrowAvailable).toBe(true);
+		expect(result.tomorrowNavVisible).toBe(false);
 		expect(result.displayDay).toBe("2026-04-07");
 		expect(result.start).toBe("2026-04-07");
 		expect(result.end).toBe("2026-04-08");
 		expect(result.currentDkHour).toBeUndefined();
 	});
 
+	it("shows nav buttons when DK hour is exactly 14:00", () => {
+		const result = computeDateWindowFromDate(dkTime(14));
+		expect(result.tomorrowAvailable).toBe(true);
+		expect(result.tomorrowNavVisible).toBe(true);
+	});
+
 	it("shows tomorrow for any hour >= 13", () => {
 		for (const hour of [13, 14, 17, 20, 23]) {
 			const result = computeDateWindowFromDate(dkTime(hour));
 			expect(result.tomorrowAvailable).toBe(true);
+		}
+	});
+
+	it("shows nav buttons for any hour >= 14", () => {
+		for (const hour of [14, 17, 20, 23]) {
+			const result = computeDateWindowFromDate(dkTime(hour));
+			expect(result.tomorrowNavVisible).toBe(true);
 		}
 	});
 

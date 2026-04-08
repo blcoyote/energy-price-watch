@@ -22,8 +22,14 @@ export function ElectricityPricesPanel(): ReactElement {
 	);
 	const [showTomorrow, setShowTomorrow] = useState(false);
 
-	const { start, end, displayDay, tomorrowAvailable, today } =
-		useDanishDateWindow();
+	const {
+		start,
+		end,
+		displayDay,
+		tomorrowAvailable,
+		tomorrowNavVisible,
+		today,
+	} = useDanishDateWindow();
 
 	const todayParams: DayAheadPricesQueryParams = {
 		priceArea,
@@ -139,7 +145,7 @@ export function ElectricityPricesPanel(): ReactElement {
 
 			{data && data.length > 0 && (
 				<div className="chart-wrapper" ref={chartWrapperRef}>
-				{tomorrowHasData && (
+					{tomorrowNavVisible && tomorrowHasData && (
 						<div className="chart-nav">
 							<button
 								type="button"

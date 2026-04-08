@@ -31,9 +31,11 @@ export type ElectricityPriceChartPoint = {
 /**
  * Aggregates 15-minute DayAheadPrices records into hourly averages.
  * Records belonging to the same clock-hour (per Danish local time) are averaged.
+ * When `DayAheadPriceDKK` is null, `eurToDkkRate` is used to convert from EUR.
  */
 export function toElectricityChartData(
 	records: DayAheadPrice[],
+	eurToDkkRate?: number,
 ): ElectricityPriceChartPoint[] {
 	// Group by the hour portion of TimeDK (e.g. "2026-04-06T14")
 	const hourMap = new Map<
@@ -42,7 +44,9 @@ export function toElectricityChartData(
 	>();
 
 	for (const r of records) {
-		const dkk = r.DayAheadPriceDKK ?? 0;
+		const dkk =
+			r.DayAheadPriceDKK ??
+			(eurToDkkRate !== undefined ? r.DayAheadPriceEUR * eurToDkkRate : 0);
 		const hourKey = r.TimeDK.slice(0, 13); // "YYYY-MM-DDTHH"
 		const existing = hourMap.get(hourKey);
 		if (existing) {
