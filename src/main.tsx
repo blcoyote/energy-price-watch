@@ -21,6 +21,7 @@ const queryClient = new QueryClient({
 	defaultOptions: {
 		queries: {
 			staleTime: 1000 * 60 * 15, // 15 min — matches DayAheadPrices update frequency
+			refetchOnWindowFocus: "always", // PWA: always refetch when returning to foreground
 			retry: 2,
 		},
 	},
