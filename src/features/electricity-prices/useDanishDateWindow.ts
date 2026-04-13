@@ -72,25 +72,44 @@ export function useDanishDateWindow(): DateWindow {
 	);
 
 	useEffect(() => {
-		const now = new Date();
-		const msUntilNextHour =
-			(60 - now.getMinutes()) * 60 * 1000 -
-			now.getSeconds() * 1000 -
-			now.getMilliseconds();
+		function scheduleHourlyRefresh() {
+			const now = new Date();
+			const msUntilNextHour =
+				(60 - now.getMinutes()) * 60 * 1000 -
+				now.getSeconds() * 1000 -
+				now.getMilliseconds();
 
-		let interval: ReturnType<typeof setInterval> | undefined;
+			let interval: ReturnType<typeof setInterval> | undefined;
 
-		const timeout = setTimeout(() => {
-			setDateWindow(computeDateWindowFromDate(new Date()));
-			interval = setInterval(
-				() => setDateWindow(computeDateWindowFromDate(new Date())),
-				60 * 60 * 1000,
-			);
-		}, msUntilNextHour);
+			const timeout = setTimeout(() => {
+				setDateWindow(computeDateWindowFromDate(new Date()));
+				interval = setInterval(
+					() => setDateWindow(computeDateWindowFromDate(new Date())),
+					60 * 60 * 1000,
+				);
+			}, msUntilNextHour);
+
+			return () => {
+				clearTimeout(timeout);
+				clearInterval(interval);
+			};
+		}
+
+		let cleanup = scheduleHourlyRefresh();
+
+		function handleVisibilityChange() {
+			if (document.visibilityState === "visible") {
+				setDateWindow(computeDateWindowFromDate(new Date()));
+				cleanup();
+				cleanup = scheduleHourlyRefresh();
+			}
+		}
+
+		document.addEventListener("visibilitychange", handleVisibilityChange);
 
 		return () => {
-			clearTimeout(timeout);
-			clearInterval(interval);
+			cleanup();
+			document.removeEventListener("visibilitychange", handleVisibilityChange);
 		};
 	}, []);
 
